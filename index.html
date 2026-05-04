@@ -3,212 +3,1368 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Free Professional CV Builder - By Sultan Ayed</title>
+<meta name="description" content="Free Professional CV Builder - Build your professional CV in minutes" />
+<title>Free Professional CV Builder</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
 :root {
   --primary: #1f6f54;
+  --primary-dark: #155941;
   --primary-light: #2e8b6c;
+  --primary-soft: #e8f3ee;
   --accent: #d4af37;
   --bg: #f4f7f6;
+  --panel: #ffffff;
+  --text: #1a2b25;
+  --text-soft: #5a6b66;
   --border: #d8e2dd;
+  --shadow: 0 10px 30px rgba(31, 111, 84, 0.12);
+  --radius: 14px;
+  --danger: #e76470;
+  --danger-soft: #fceced;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
+html, body { height: 100%; }
 body {
   font-family: 'Inter', 'Cairo', sans-serif;
-  background-color: var(--primary);
-  color: #333;
-  line-height: 1.6;
+  background: linear-gradient(135deg, #1f6f54 0%, #2e8b6c 100%);
+  min-height: 100vh; color: var(--text);
+  -webkit-font-smoothing: antialiased;
 }
+body[dir="rtl"] { font-family: 'Cairo', 'Inter', sans-serif; }
 
-/* الحاوية الرئيسية - الحل الجذري هنا */
+.app-header {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: #fff; padding: 14px 24px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+  position: sticky; top: 0; z-index: 100;
+}
+.brand { display: flex; align-items: center; gap: 12px; margin-inline-end: auto; }
+.brand-logo {
+  width: 48px; height: 48px;
+  background: var(--accent); color: var(--primary-dark);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-weight: 800; font-size: 20px;
+  font-family: 'Playfair Display', serif;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.brand-text h1 { font-size: 18px; font-weight: 700; letter-spacing: 0.3px; }
+.brand-text p { font-size: 11px; opacity: 0.85; letter-spacing: 1.2px; text-transform: uppercase; }
+.header-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn {
+  border: 0; cursor: pointer;
+  padding: 10px 16px; border-radius: 10px;
+  font-weight: 600; font-size: 14px;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s;
+  font-family: inherit; white-space: nowrap;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.18); }
+.btn:active { transform: translateY(0); }
+.btn-light { background: rgba(255,255,255,0.14); color: #fff; backdrop-filter: blur(4px); }
+.btn-light:hover { background: rgba(255,255,255,0.24); }
+.btn-warn { background: #ffd54a; color: #3a2a00; }
+.btn-lang { background: var(--accent); color: var(--primary-dark); font-weight: 700; }
+
+.dropdown { position: relative; }
+.dropdown-menu {
+  position: absolute; top: calc(100% + 6px); inset-inline-start: 0;
+  background: #fff; color: var(--text);
+  border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  min-width: 200px; display: none; overflow: hidden; z-index: 200;
+}
+.dropdown.open .dropdown-menu { display: block; }
+.dropdown-menu button {
+  width: 100%; background: none; border: 0;
+  text-align: start; padding: 12px 16px; cursor: pointer;
+  font-size: 14px; display: flex; align-items: center; gap: 10px;
+  font-family: inherit; color: var(--text);
+}
+.dropdown-menu button:hover { background: var(--primary-soft); }
+
 .app-main {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
-  max-width: 1400px;
-  margin: 0 auto;
+  display: grid; grid-template-columns: minmax(320px, 480px) 1fr;
+  gap: 20px; padding: 20px;
+  max-width: 1500px; margin: 0 auto;
+}
+.panel {
+  background: var(--panel); border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex; flex-direction: column;
 }
 
-/* لوحة المحرر */
-.editor-panel {
-  flex: 1;
-  min-width: 350px;
-  background: white;
-  border-radius: 15px;
-  padding: 20px;
-  /* حذفنا max-height لضمان عدم قص المحتوى */
-  height: fit-content; 
+/* ===== DESKTOP (>= 981px): two columns, each panel scrolls internally ===== */
+@media (min-width: 981px) {
+  .panel { max-height: calc(100vh - 110px); overflow: hidden; }
+  .editor-panel { padding: 24px; overflow-y: auto; }
+  .preview-panel { padding: 24px; overflow-y: auto; }
 }
 
-/* تنسيق الأقسام */
-.section {
-  margin-bottom: 15px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: visible !important; /* ضمان عدم القص */
-  background: #fff;
+/* ===== MOBILE (<= 980px): single column, page itself scrolls naturally ===== */
+@media (max-width: 980px) {
+  .app-main { grid-template-columns: 1fr; padding: 12px; gap: 14px; }
+  .panel { max-height: none !important; overflow: visible !important; }
+  .editor-panel { padding: 16px; overflow: visible !important; }
+  .preview-panel { padding: 16px; overflow: visible !important; }
+  .cv-paper { padding: 24px 18px; }
 }
+.editor-brand { text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 18px; margin-bottom: 18px; }
+.editor-brand .crest {
+  width: 76px; height: 76px; margin: 0 auto 8px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: var(--accent); border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700; font-size: 26px;
+  box-shadow: 0 6px 18px rgba(31,111,84,0.3);
+  border: 3px solid var(--accent);
+}
+.editor-brand .by-line { font-size: 16px; color: var(--text); margin-top: 6px; }
+.editor-brand .by-line a { color: var(--primary); font-weight: 700; text-decoration: none; }
+.editor-brand .by-line a:hover { text-decoration: underline; }
+.editor-brand .sponsored { font-size: 14px; font-weight: 600; color: var(--text-soft); margin-top: 4px; }
+.editor-brand .version { font-size: 12px; color: var(--text-soft); opacity: 0.85; margin-top: 2px; }
 
+.notice {
+  background: var(--primary-soft);
+  border-inline-start: 4px solid var(--primary);
+  padding: 12px 14px; border-radius: 8px;
+  margin-bottom: 18px;
+  font-size: 13px; line-height: 1.6; color: var(--text);
+}
+.notice i { color: var(--primary); margin: 0 4px; }
+
+.section { margin-bottom: 10px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
 .section-head {
   width: 100%;
-  padding: 15px;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #fff; border: 0;
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
   cursor: pointer;
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 600;
+  font-weight: 600; font-size: 15px;
+  font-family: inherit; text-align: start;
 }
+.section-head .chev { margin-inline-start: auto; transition: transform 0.25s ease; }
+.section.open .section-head .chev { transform: rotate(90deg); }
+body[dir="rtl"] .section.open .section-head .chev { transform: rotate(-90deg); }
+.section-body { display: none; padding: 16px; background: #fff; }
+.section.open .section-body { display: block; }
 
-.section-head i:first-child { margin-right: 10px; }
-body[dir="rtl"] .section-head i:first-child { margin-left: 10px; margin-right: 0; }
-
-.chev { margin-inline-start: auto; transition: 0.3s; }
-.section.open .chev { transform: rotate(90deg); }
-
-/* محتوى القسم - حل مشكلة الارتفاع */
-.section-body {
-  display: none;
-  padding: 20px;
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.field label .star { color: var(--danger); }
+.hint { display: block; font-size: 11px; color: var(--text-soft); margin-top: 4px; }
+.field input, .field textarea, .field select {
+  width: 100%; padding: 10px 12px;
+  border: 1px solid var(--border); border-radius: 8px;
+  font-size: 14px; font-family: inherit;
+  background: #fafdfc;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  color: var(--text);
+}
+.field input:focus, .field textarea:focus, .field select:focus {
+  outline: 0; border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(31,111,84,0.15);
   background: #fff;
-  border-top: 1px solid var(--border);
-  height: auto !important; /* تمدد تلقائي */
-  min-height: min-content;
-  overflow: visible !important;
 }
+.field textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+.field textarea.lined { font-family: 'Courier New', monospace; font-size: 13px; }
 
-.section.open .section-body {
-  display: block;
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
+
+.list-item {
+  border: 2px solid var(--primary-light);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 14px;
+  background: linear-gradient(180deg, #f4faf7 0%, #ffffff 100%);
+  box-shadow: 0 2px 10px rgba(31, 111, 84, 0.08);
 }
-
-/* الحقول داخل القسم */
-.field { margin-bottom: 15px; }
-.field label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
-.field input, .field textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+.remove-btn-block {
+  background: var(--danger-soft); color: #b3343c;
+  border: 1px solid #f0c4c8;
+  padding: 7px 14px; border-radius: 6px; cursor: pointer;
+  font-size: 13px; font-weight: 600;
   font-family: inherit;
-  background: #fdfdfd;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.remove-btn-block:hover { background: #fbdbdf; }
+
+.add-btn {
+  background: #2dbb86; color: #fff; border: 0;
+  padding: 9px 18px; border-radius: 6px; cursor: pointer;
+  font-weight: 600; font-size: 13px; font-family: inherit;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.add-btn:hover { background: #25a274; }
+
+.subadd-btn {
+  width: 100%; background: var(--primary); color: #fff;
+  border: 0; padding: 8px; border-radius: 6px; cursor: pointer;
+  font-weight: 600; font-size: 13px; font-family: inherit;
+  margin-bottom: 8px;
+}
+.subadd-btn:hover { background: var(--primary-dark); }
+
+.subitem {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 6px; padding: 10px; margin-bottom: 8px;
+  position: relative;
+}
+.subitem .subremove {
+  position: absolute; top: 6px; inset-inline-end: 6px;
+  background: transparent; border: 0;
+  color: var(--danger); cursor: pointer; font-size: 14px;
 }
 
-/* زر الإضافة */
-.btn-add {
-  background: #27ae60;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 600;
-  margin-top: 10px;
+.checkbox-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 4px; font-size: 14px; cursor: pointer;
+}
+.checkbox-row input { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); }
+
+.custom-add-row { display: flex; gap: 8px; }
+.custom-add-row input { flex: 1; }
+
+.reorder-item {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 12px; margin-bottom: 6px;
+}
+.reorder-item .label { flex: 1; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.reorder-arrows { display: flex; gap: 4px; }
+.arrow-btn {
+  width: 32px; height: 32px;
+  background: var(--primary); color: #fff;
+  border: 0; border-radius: 6px; cursor: pointer; font-size: 12px;
+}
+.arrow-btn:hover { background: var(--primary-dark); }
+.arrow-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+.preview-title {
+  text-align: center; margin-bottom: 16px;
+  font-size: 20px; font-weight: 700;
+  color: var(--text); letter-spacing: 0.4px;
+}
+.preview-title::after {
+  content: ""; display: block;
+  width: 60px; height: 3px;
+  background: var(--accent); margin: 8px auto 0;
+  border-radius: 2px;
+}
+.cv-paper {
+  background: #fff; padding: 40px 48px; min-height: 800px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08); border-radius: 6px;
+  font-family: 'Georgia', 'Cairo', serif;
+  font-size: 13.5px; line-height: 1.65; color: #222;
+}
+.cv-header { text-align: center; margin-bottom: 18px; }
+.cv-name {
+  font-family: 'Playfair Display', 'Cairo', serif;
+  font-size: 26px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.cv-title-line { font-size: 14px; font-style: italic; color: #444; margin-bottom: 6px; }
+.cv-contact-line { font-size: 12.5px; color: #555; word-break: break-word; }
+.cv-section { margin-top: 20px; }
+.cv-section-heading {
+  font-family: 'Playfair Display', 'Cairo', serif;
+  font-size: 14px; font-weight: 700;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  border-bottom: 1.5px solid #222;
+  padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-summary { text-align: justify; }
+.cv-entry { margin-bottom: 14px; }
+.cv-entry-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.cv-entry-title { font-weight: 700; }
+.cv-entry-date { font-weight: 700; white-space: nowrap; }
+.cv-entry-sub { font-style: italic; color: #444; margin-bottom: 4px; }
+.cv-entry ul { margin-inline-start: 18px; margin-top: 4px; }
+.cv-entry ul li { margin-bottom: 2px; }
+.cv-projects { margin-inline-start: 18px; margin-top: 6px; }
+.cv-project { margin-bottom: 4px; }
+.cv-skills-list, .cv-langs-list { line-height: 1.9; }
+.cv-skill-tag {
+  display: inline-block;
+  margin: 2px 4px 2px 0;
+  padding: 2px 8px;
+  background: #f0f0f0; border-radius: 3px; font-size: 12.5px;
+}
+.personal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 24px; }
+.personal-grid div b { display: inline-block; min-width: 110px; }
+.cv-refs-note { font-style: italic; color: #444; }
+
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(15, 30, 25, 0.6);
+  backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center;
+  z-index: 1000; padding: 20px;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  background: #fff; max-width: 540px; width: 100%;
+  border-radius: 14px; padding: 28px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.modal h3 {
+  font-size: 20px; margin-bottom: 12px;
+  color: var(--primary-dark);
+  display: flex; align-items: center; gap: 10px;
+}
+.modal p { margin-bottom: 14px; line-height: 1.7; color: var(--text-soft); font-size: 14px; }
+.modal ul { margin-inline-start: 20px; margin-bottom: 14px; font-size: 14px; line-height: 1.8; }
+.modal-close {
+  display: block; margin-inline-start: auto;
+  background: var(--primary); color: #fff;
+  border: 0; padding: 10px 22px; border-radius: 8px;
+  font-weight: 600; cursor: pointer; font-family: inherit;
 }
 
-/* لوحة المعاينة */
-.preview-panel {
-  flex: 1.5;
-  min-width: 400px;
-  background: #e0e0e0;
-  padding: 30px;
-  border-radius: 15px;
-  position: sticky;
-  top: 20px;
-  height: calc(100vh - 40px);
-  overflow-y: auto;
+@media print {
+  body { background: #fff; }
+  .app-header, .editor-panel, .preview-title { display: none !important; }
+  .app-main { display: block; padding: 0; }
+  .panel.preview-panel { box-shadow: none; max-height: none; padding: 0; }
+  .cv-paper { box-shadow: none; padding: 30px; }
 }
+.panel::-webkit-scrollbar { width: 8px; }
+.panel::-webkit-scrollbar-track { background: #f0f0f0; }
+.panel::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
 
-@media (max-width: 850px) {
-  .preview-panel { display: none; } /* إخفاء المعاينة في الجوال لتركيز المحرر */
-  .app-main { padding: 10px; }
-}
+body[dir="rtl"] .cv-paper, body[dir="rtl"] .cv-name, body[dir="rtl"] .cv-section-heading { font-family: 'Cairo', serif; }
 </style>
 </head>
 <body>
 
+<header class="app-header">
+  <div class="brand">
+    <div class="brand-logo">S</div>
+    <div class="brand-text">
+      <h1 data-i18n="appTitle">Free Professional CV Builder</h1>
+      <p data-i18n="appTagline">BUILD YOUR PROFESSIONAL CV IN MINUTES</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="dropdown" id="fileDropdown">
+      <button class="btn btn-light" onclick="toggleDropdown('fileDropdown')">
+        <i class="fa-regular fa-file"></i> <span data-i18n="file">File</span>
+        <i class="fa-solid fa-caret-down"></i>
+      </button>
+      <div class="dropdown-menu">
+        <button onclick="saveCV()"><i class="fa-solid fa-floppy-disk"></i> <span data-i18n="saveCv">Save CV</span></button>
+        <button onclick="document.getElementById('loadInput').click()"><i class="fa-solid fa-folder-open"></i> <span data-i18n="loadCv">Load CV</span></button>
+        <button onclick="resetCV()"><i class="fa-solid fa-rotate-left"></i> <span data-i18n="resetCv">Reset</span></button>
+      </div>
+    </div>
+    <input type="file" id="loadInput" accept=".json" style="display:none" onchange="loadCV(event)" />
+    <button class="btn btn-light" onclick="toggleAllSections()"><i class="fa-regular fa-eye"></i> <span data-i18n="expandCollapse">Sections Expand/Collapse</span></button>
+    <button class="btn btn-light" onclick="downloadPDF()"><i class="fa-solid fa-download"></i> <span data-i18n="downloadCv">Download CV</span></button>
+    <button class="btn btn-light" onclick="openModal()"><i class="fa-regular fa-circle-question"></i> <span data-i18n="about">About</span></button>
+    <button class="btn btn-warn" onclick="loadSample()"><i class="fa-solid fa-file-import"></i> <span data-i18n="loadSample">Load Sample CV</span></button>
+    <button class="btn btn-lang" onclick="toggleLang()"><i class="fa-solid fa-language"></i> <span id="langLabel">عربي</span></button>
+  </div>
+</header>
+
 <main class="app-main">
-  <!-- المحرر -->
-  <section class="editor-panel">
-    <div style="text-align:center; margin-bottom:20px;">
-        <h2 style="color:var(--primary)">Sultan Ayed CV Builder</h2>
-        <p style="font-size:12px; color:#666;">Version 1.1.0</p>
+  <section class="panel editor-panel">
+    <div class="editor-brand">
+      <div class="crest">S</div>
+      <div class="by-line">
+        <span data-i18n="by">By:</span>
+        <a href="https://www.linkedin.com/in/sultan-ayed-6502aa156/" target="_blank" rel="noopener">SULTAN AYED</a>
+        <a href="https://www.linkedin.com/in/sultan-ayed-6502aa156/" target="_blank" rel="noopener" title="LinkedIn" style="color:#0a66c2;margin-inline-start:6px;text-decoration:none;">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+      </div>
+      <div class="sponsored" data-i18n="sponsored">Personal CV Builder</div>
+      <div class="version" data-i18n="version">Version: 1.1.0</div>
     </div>
 
-    <!-- قسم الخبرات المقطوع في صورتك -->
-    <div class="section open" id="sec-exp">
-      <button class="section-head" onclick="toggleSection('sec-exp')">
-        <i class="fa-solid fa-briefcase"></i> 
-        <span>Professional Experience</span>
+    <div class="notice">
+      <i class="fa-regular fa-circle-info"></i>
+      <span data-i18n="noticeText">After entering your information, you can save all CV data (File → Save CV). This allows you to import it again later for any future modifications.</span>
+    </div>
+
+    <!-- Basic Info -->
+    <div class="section open" data-section="basic">
+      <button class="section-head" onclick="toggleSection('basic')">
+        <i class="fa-solid fa-user"></i>
+        <span data-i18n="basicInfo">Basic Information</span>
         <i class="fa-solid fa-chevron-right chev"></i>
       </button>
       <div class="section-body">
-        <div id="experienceItems">
-            <!-- سيتم إضافة الخبرات هنا -->
-            <div class="field">
-                <label>Company Name</label>
-                <input type="text" placeholder="e.g. Saudi Aramco">
-            </div>
-            <div class="field">
-                <label>Job Title</label>
-                <input type="text" placeholder="e.g. Cybersecurity Engineer">
-            </div>
-        </div>
-        <button class="btn-add" onclick="alert('Experience Added')">
-            <i class="fa-solid fa-plus"></i> Add Experience
+        <div class="field"><label><span data-i18n="fullName">Full Name</span> <span class="star">*</span></label>
+          <input type="text" id="f_name" oninput="render()" /></div>
+        <div class="field"><label><span data-i18n="jobTitle">Current Position Title</span> <span class="star">*</span></label>
+          <input type="text" id="f_title" oninput="render()" /></div>
+        <div class="field"><label><span data-i18n="email">Email</span> <span class="star">*</span></label>
+          <input type="email" id="f_email" oninput="render()" /></div>
+        <div class="field"><label><span data-i18n="phone">Phone Number</span> <span class="star">*</span></label>
+          <input type="text" id="f_phone" oninput="render()" />
+          <span class="hint" data-i18n="phoneHint">(Country Code) (Phone Number)</span></div>
+        <div class="field"><label><span data-i18n="address">Current Address</span> <span class="star">*</span></label>
+          <input type="text" id="f_city" oninput="render()" />
+          <span class="hint" data-i18n="addressHint">City, Region, Country</span></div>
+        <div class="field"><label data-i18n="linkedin">LinkedIn Profile link</label>
+          <input type="text" id="f_linkedin" oninput="render()" /></div>
+        <div class="field"><label><span data-i18n="summary">CV Summary</span> <span class="star">*</span></label>
+          <textarea id="f_summary" oninput="render()"></textarea></div>
+      </div>
+    </div>
+
+    <!-- Experience -->
+    <div class="section" data-section="experience">
+      <button class="section-head" onclick="toggleSection('experience')">
+        <i class="fa-solid fa-briefcase"></i>
+        <span data-i18n="experience">Professional Experience</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div id="experienceList"></div>
+        <button class="add-btn" onclick="addExperience()">
+          <i class="fa-solid fa-plus"></i> <span data-i18n="addExperience">Add Experience</span>
         </button>
       </div>
     </div>
 
-    <!-- باقي الأقسام -->
-    <div class="section" id="sec-edu">
-        <button class="section-head" onclick="toggleSection('sec-edu')">
-          <i class="fa-solid fa-graduation-cap"></i> 
-          <span>Education</span>
-          <i class="fa-solid fa-chevron-right chev"></i>
+    <!-- Education -->
+    <div class="section" data-section="education">
+      <button class="section-head" onclick="toggleSection('education')">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <span data-i18n="education">Education</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div id="educationList"></div>
+        <button class="add-btn" onclick="addEducation()">
+          <i class="fa-solid fa-plus"></i> <span data-i18n="addEducation">Add Education</span>
         </button>
-        <div class="section-body">
-            <div class="field">
-                <label>Degree</label>
-                <input type="text" placeholder="e.g. PhD in Cybersecurity">
-            </div>
+      </div>
+    </div>
+
+    <!-- Personal -->
+    <div class="section" data-section="personal">
+      <button class="section-head" onclick="toggleSection('personal')">
+        <i class="fa-solid fa-id-card"></i>
+        <span data-i18n="personal">Personal Details</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div class="field"><label data-i18n="dob">Date of Birth</label>
+          <input id="p_dob" placeholder="DD/MM/YYYY" oninput="render()" /></div>
+        <div class="field"><label data-i18n="marital">Marital Status</label>
+          <select id="p_marital" onchange="render()">
+            <option value=""></option>
+            <option value="Single" data-i18n-opt="single">Single</option>
+            <option value="Married" data-i18n-opt="married">Married</option>
+            <option value="Divorced" data-i18n-opt="divorced">Divorced</option>
+            <option value="Widowed" data-i18n-opt="widowed">Widowed</option>
+          </select></div>
+        <div class="field"><label data-i18n="military">Military Status</label>
+          <select id="p_military" onchange="render()">
+            <option value=""></option>
+            <option value="Completed" data-i18n-opt="completed">Completed</option>
+            <option value="Exempted" data-i18n-opt="exempted">Exempted</option>
+            <option value="Postponed" data-i18n-opt="postponed">Postponed</option>
+            <option value="Not Applicable" data-i18n-opt="notapplicable">Not Applicable</option>
+          </select></div>
+        <div class="field"><label data-i18n="driver">Driver License</label>
+          <select id="p_driver" onchange="render()">
+            <option value=""></option>
+            <option value="Yes" data-i18n-opt="yes">Yes</option>
+            <option value="No" data-i18n-opt="no">No</option>
+          </select></div>
+        <div class="field"><label data-i18n="nationality">Citizenship</label>
+          <input id="p_nationality" oninput="render()" /></div>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="section" data-section="skills">
+      <button class="section-head" onclick="toggleSection('skills')">
+        <i class="fa-solid fa-gears"></i>
+        <span data-i18n="skills">Technical Skills</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div class="field"><label data-i18n="skillsLabel">Skills - separate with comma (,)</label>
+          <textarea id="f_skills" oninput="render()" placeholder="Project Management, Python, Data Analysis"></textarea></div>
+      </div>
+    </div>
+
+    <!-- Courses -->
+    <div class="section" data-section="courses">
+      <button class="section-head" onclick="toggleSection('courses')">
+        <i class="fa-solid fa-book"></i>
+        <span data-i18n="courses">Professional Courses</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div id="coursesList"></div>
+        <button class="add-btn" onclick="addCourse()">
+          <i class="fa-solid fa-plus"></i> <span data-i18n="addCourse">Add Course</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Certs -->
+    <div class="section" data-section="certs">
+      <button class="section-head" onclick="toggleSection('certs')">
+        <i class="fa-solid fa-certificate"></i>
+        <span data-i18n="certs">Professional Certificates</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div id="certsList"></div>
+        <button class="add-btn" onclick="addCert()">
+          <i class="fa-solid fa-plus"></i> <span data-i18n="addCert">Add Certificate</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Languages -->
+    <div class="section" data-section="languages">
+      <button class="section-head" onclick="toggleSection('languages')">
+        <i class="fa-solid fa-language"></i>
+        <span data-i18n="languages">Language Skills</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div class="field"><label data-i18n="langsLabel">Languages and Proficiency - separate with comma (,)</label>
+          <textarea id="f_langs" oninput="render()" placeholder="Arabic - Native, English - Fluent"></textarea></div>
+      </div>
+    </div>
+
+    <!-- Custom -->
+    <div class="section" data-section="custom">
+      <button class="section-head" onclick="toggleSection('custom')">
+        <i class="fa-solid fa-circle-plus"></i>
+        <span data-i18n="custom">Custom Sections</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div class="custom-add-row">
+          <input id="customTitle" placeholder="Section Title (e.g., Volunteer Experience)" />
+          <button class="add-btn" onclick="addCustomSection()">
+            <i class="fa-solid fa-plus"></i> <span data-i18n="addSection">Add Section</span>
+          </button>
         </div>
+        <div id="customList" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <!-- References -->
+    <div class="section" data-section="references">
+      <button class="section-head" onclick="toggleSection('references')">
+        <i class="fa-solid fa-user-group"></i>
+        <span data-i18n="references">References</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <label class="checkbox-row">
+          <input type="checkbox" id="refsAvailable" onchange="render()" />
+          <span data-i18n="refsAvailable">Include "References available upon request" at the end of CV</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Order -->
+    <div class="section" data-section="order">
+      <button class="section-head" onclick="toggleSection('order')">
+        <i class="fa-solid fa-sort"></i>
+        <span data-i18n="adjustOrder">Adjust CV Sections Order</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body"><div id="orderList"></div></div>
     </div>
 
   </section>
 
-  <!-- المعاينة -->
-  <section class="preview-panel">
-    <div style="background:white; padding:40px; min-height:100%; box-shadow: 0 0 20px rgba(0,0,0,0.2)">
-        <h1 style="text-align:center">Sultan Ayed</h1>
-        <hr>
-        <p style="margin-top:20px">Your CV content will appear here...</p>
-    </div>
+  <section class="panel preview-panel">
+    <h2 class="preview-title" data-i18n="preview">Your CV Preview</h2>
+    <div id="cvPaper" class="cv-paper"></div>
   </section>
 </main>
 
+<div class="modal-backdrop" id="aboutModal" onclick="if(event.target.id==='aboutModal') closeModal()">
+  <div class="modal">
+    <h3><i class="fa-regular fa-circle-question"></i> <span data-i18n="aboutTitle">About</span></h3>
+    <p data-i18n="aboutP1">A free, professional CV builder. Fill in your information and watch your CV update live, then download a clean PDF version ready to share.</p>
+    <ul>
+      <li data-i18n="aboutF1">Two languages: English and Arabic.</li>
+      <li data-i18n="aboutF2">Save and load all your data locally as a JSON file.</li>
+      <li data-i18n="aboutF3">Clean, ATS-friendly PDF output.</li>
+      <li data-i18n="aboutF4">Customize every section with custom sections and reordering.</li>
+    </ul>
+    <p data-i18n="aboutMade">Made with ❤️ by SULTAN AYED.</p>
+    <button class="modal-close" onclick="closeModal()" data-i18n="close">Close</button>
+  </div>
+</div>
+
 <script>
-function toggleSection(id) {
-    const sec = document.getElementById(id);
-    const isOpen = sec.classList.contains('open');
-    
-    // إغلاق باقي الأقسام لضمان تجربة مستخدم أفضل
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('open'));
-    
-    if (!isOpen) {
-        sec.classList.add('open');
-    }
+const STORAGE_KEY = 'cv_builder_data_v2';
+const LANG_KEY = 'cv_builder_lang';
+
+let state = {
+  basic: { name:'', title:'', city:'', phone:'', email:'', linkedin:'', summary:'' },
+  experience: [],
+  education: [],
+  personal: { dob:'', marital:'', military:'', driver:'', nationality:'' },
+  skills: '',
+  courses: [],
+  certs: [],
+  languages: '',
+  custom: [],
+  refsAvailable: false,
+  order: ['experience','education','personal','skills','courses','certs','languages']
+};
+
+let currentLang = localStorage.getItem(LANG_KEY) || 'en';
+
+const i18n = {
+  en: {
+    appTitle:'Free Professional CV Builder', appTagline:'BUILD YOUR PROFESSIONAL CV IN MINUTES',
+    file:'File', saveCv:'Save CV', loadCv:'Load CV', resetCv:'Reset',
+    expandCollapse:'Sections Expand/Collapse', downloadCv:'Download CV',
+    about:'About', loadSample:'Load Sample CV',
+    by:'By:', sponsored:'Personal CV Builder', version:'Version: 1.1.0',
+    noticeText:'After entering your information, you can save all CV data (File → Save CV). This allows you to import it again later for any future modifications.',
+    basicInfo:'Basic Information', experience:'Professional Experience', education:'Education',
+    personal:'Personal Details', skills:'Technical Skills', courses:'Professional Courses',
+    certs:'Professional Certificates', languages:'Language Skills', custom:'Custom Sections',
+    references:'References', adjustOrder:'Adjust CV Sections Order',
+    fullName:'Full Name', jobTitle:'Current Position Title', address:'Current Address',
+    phone:'Phone Number', email:'Email',
+    phoneHint:'(Country Code) (Phone Number)', addressHint:'City, Region, Country',
+    summary:'CV Summary', linkedin:'LinkedIn Profile link',
+    addExperience:'Add Experience', addEducation:'Add Education',
+    addCourse:'Add Course', addCert:'Add Certificate', addSection:'Add Section', addProject:'Add Project',
+    dob:'Date of Birth', marital:'Marital Status', military:'Military Status',
+    driver:'Driver License', nationality:'Citizenship',
+    single:'Single', married:'Married', divorced:'Divorced', widowed:'Widowed',
+    completed:'Completed', exempted:'Exempted', postponed:'Postponed', notapplicable:'Not Applicable',
+    yes:'Yes', no:'No',
+    skillsLabel:'Skills - separate with comma (,)',
+    langsLabel:'Languages and Proficiency - separate with comma (,)',
+    refsAvailable:'Include "References available upon request" at the end of CV',
+    refsAvailableShort:'References available upon request.',
+    preview:'Your CV Preview',
+    profileSummary:'PROFILE SUMMARY', expHead:'PROFESSIONAL EXPERIENCE', eduHead:'EDUCATION',
+    persHead:'PERSONAL DETAILS', skillHead:'TECHNICAL SKILLS', courseHead:'PROFESSIONAL COURSES',
+    certHead:'PROFESSIONAL CERTIFICATES', langHead:'LANGUAGE SKILLS', refHead:'REFERENCES',
+    company:'Company Name', jobRole:'Job Title', duration:'Duration (From - to)',
+    durationPh:'Jan 2020 - Present',
+    projects:'Projects (Optional)', projectName:'Project Name', projectDesc:'Description',
+    responsibilities:'Responsibilities (one per line)', responsibilitiesShort:'Responsibilities:',
+    respPh:'• Your job duties\n• Your main tasks',
+    removeCompany:'Remove Company', remove:'Remove',
+    institution:'Institution Name', degree:'Degree', gradYear:'Graduation Year',
+    eduDetails:'Additional details (one per line, will show as bullet points)',
+    eduDetailsPh:'• Major: Engineering Management\n• Graduation Project: Smart City\n• Relevant Coursework: Project Management',
+    courseName:'Course Title', provider:'Provider/Institution', year:'Year/Date',
+    certName:'Certificate Title', issuer:'Issuing Organization', dateIssued:'Date Issued',
+    credId:'Credential ID (optional)', credIdPh:'e.g., ABC123456789',
+    customTitle:'Section Title (e.g., Volunteer Experience)',
+    customContent:'Content (one item per line)',
+    aboutTitle:'About this Tool',
+    aboutP1:'A free, professional CV builder. Fill in your information and watch your CV update live, then download a clean PDF version ready to share.',
+    aboutF1:'Two languages: English and Arabic.',
+    aboutF2:'Save and load all your data locally as a JSON file.',
+    aboutF3:'Clean, ATS-friendly PDF output.',
+    aboutF4:'Customize every section with custom sections and reordering.',
+    aboutMade:'Made with ❤️ by SULTAN AYED.',
+    close:'Close',
+    confirmReset:'Reset all data? This cannot be undone.',
+    graduationYear:'Graduation Year',
+    sectionLabels:{ experience:'Professional Experience', education:'Education', personal:'Personal Details', skills:'Technical Skills', courses:'Courses', certs:'Professional Certificates', languages:'Languages' }
+  },
+  ar: {
+    appTitle:'منشئ السيرة الذاتية الاحترافي المجاني', appTagline:'أنشئ سيرتك الذاتية الاحترافية في دقائق',
+    file:'ملف', saveCv:'حفظ السيرة', loadCv:'تحميل السيرة', resetCv:'إعادة ضبط',
+    expandCollapse:'توسيع/طي الأقسام', downloadCv:'تنزيل السيرة',
+    about:'حول', loadSample:'تحميل نموذج',
+    by:'بواسطة:', sponsored:'منشئ السيرة الشخصية', version:'الإصدار: 1.1.0',
+    noticeText:'بعد إدخال معلوماتك، يمكنك حفظ جميع بيانات السيرة الذاتية (ملف ← حفظ السيرة). يتيح لك ذلك استيرادها مرة أخرى لاحقًا لإجراء أي تعديلات مستقبلية.',
+    basicInfo:'المعلومات الأساسية', experience:'الخبرات المهنية', education:'المؤهلات العلمية',
+    personal:'البيانات الشخصية', skills:'المهارات التقنية', courses:'الدورات المهنية',
+    certs:'الشهادات المهنية', languages:'المهارات اللغوية', custom:'أقسام مخصصة',
+    references:'المعرّفون', adjustOrder:'ترتيب أقسام السيرة',
+    fullName:'الاسم الكامل', jobTitle:'المسمى الوظيفي الحالي', address:'العنوان الحالي',
+    phone:'رقم الجوال', email:'البريد الإلكتروني',
+    phoneHint:'(رمز الدولة) (رقم الجوال)', addressHint:'المدينة، المنطقة، الدولة',
+    summary:'الملخص الشخصي', linkedin:'رابط لينكدإن',
+    addExperience:'إضافة خبرة', addEducation:'إضافة مؤهل',
+    addCourse:'إضافة دورة', addCert:'إضافة شهادة', addSection:'إضافة قسم', addProject:'إضافة مشروع',
+    dob:'تاريخ الميلاد', marital:'الحالة الاجتماعية', military:'الحالة العسكرية',
+    driver:'رخصة قيادة', nationality:'الجنسية',
+    single:'أعزب', married:'متزوج', divorced:'مطلق', widowed:'أرمل',
+    completed:'منتهية', exempted:'معفى', postponed:'مؤجلة', notapplicable:'لا ينطبق',
+    yes:'نعم', no:'لا',
+    skillsLabel:'المهارات - افصل بفاصلة (،)',
+    langsLabel:'اللغات ومستوى الإتقان - افصل بفاصلة (،)',
+    refsAvailable:'إضافة "تتوفر المعرّفات عند الطلب" في نهاية السيرة',
+    refsAvailableShort:'تتوفر المعرّفات عند الطلب.',
+    preview:'معاينة السيرة الذاتية',
+    profileSummary:'الملخص الشخصي', expHead:'الخبرات المهنية', eduHead:'المؤهلات العلمية',
+    persHead:'البيانات الشخصية', skillHead:'المهارات التقنية', courseHead:'الدورات المهنية',
+    certHead:'الشهادات المهنية', langHead:'المهارات اللغوية', refHead:'المعرّفون',
+    company:'اسم الجهة', jobRole:'المسمى الوظيفي', duration:'المدة (من - إلى)',
+    durationPh:'يناير 2020 - حتى الآن',
+    projects:'المشاريع (اختياري)', projectName:'اسم المشروع', projectDesc:'الوصف',
+    responsibilities:'المسؤوليات (كل بند في سطر)', responsibilitiesShort:'المسؤوليات:',
+    respPh:'• مهامك الوظيفية\n• مسؤولياتك الرئيسية',
+    removeCompany:'حذف الجهة', remove:'حذف',
+    institution:'اسم المؤسسة التعليمية', degree:'الدرجة العلمية', gradYear:'سنة التخرج',
+    eduDetails:'تفاصيل إضافية (كل بند في سطر، تظهر كنقاط)',
+    eduDetailsPh:'• التخصص: إدارة هندسية\n• مشروع التخرج: مدينة ذكية\n• المواد ذات الصلة: إدارة المشاريع',
+    courseName:'اسم الدورة', provider:'الجهة المانحة', year:'السنة/التاريخ',
+    certName:'اسم الشهادة', issuer:'الجهة المُصدِرة', dateIssued:'تاريخ الإصدار',
+    credId:'رقم الاعتماد (اختياري)', credIdPh:'مثال: ABC123456789',
+    customTitle:'اسم القسم (مثل: العمل التطوعي)',
+    customContent:'المحتوى (كل بند في سطر)',
+    aboutTitle:'حول هذه الأداة',
+    aboutP1:'منشئ سيرة ذاتية احترافي ومجاني. املأ بياناتك وشاهد السيرة تتحدّث مباشرة، ثم نزّل نسخة PDF نظيفة جاهزة للمشاركة.',
+    aboutF1:'لغتان: العربية والإنجليزية.',
+    aboutF2:'احفظ بياناتك وحمّلها لاحقًا كملف JSON محلي.',
+    aboutF3:'مخرجات PDF نظيفة ومتوافقة مع أنظمة الفرز.',
+    aboutF4:'خصّص كل قسم بحرية كاملة مع أقسام مخصصة وإعادة ترتيب.',
+    aboutMade:'صُنع بـ ❤️ بواسطة سلطان عايد.',
+    close:'إغلاق',
+    confirmReset:'إعادة ضبط جميع البيانات؟ لا يمكن التراجع.',
+    graduationYear:'سنة التخرج',
+    sectionLabels:{ experience:'الخبرات المهنية', education:'المؤهلات العلمية', personal:'البيانات الشخصية', skills:'المهارات التقنية', courses:'الدورات', certs:'الشهادات المهنية', languages:'اللغات' }
+  }
+};
+
+function t(key){ return i18n[currentLang][key] || key; }
+
+function applyLang(){
+  document.documentElement.lang = currentLang === 'ar' ? 'ar' : 'en';
+  document.body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+  document.getElementById('langLabel').textContent = currentLang === 'ar' ? 'EN' : 'عربي';
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (i18n[currentLang][key]) el.textContent = i18n[currentLang][key];
+  });
+  document.querySelectorAll('[data-i18n-opt]').forEach(el => {
+    const key = el.getAttribute('data-i18n-opt');
+    if (i18n[currentLang][key]) el.textContent = i18n[currentLang][key];
+  });
+
+  const skTa = document.getElementById('f_skills');
+  if (skTa) skTa.placeholder = currentLang==='ar' ? 'إدارة المشاريع، بايثون، تحليل البيانات' : 'Project Management, Python, Data Analysis';
+  const lgTa = document.getElementById('f_langs');
+  if (lgTa) lgTa.placeholder = currentLang==='ar' ? 'العربية - اللغة الأم، الإنجليزية - بطلاقة' : 'Arabic - Native, English - Fluent';
+  const cTitle = document.getElementById('customTitle');
+  if (cTitle) cTitle.placeholder = t('customTitle');
+
+  renderAllLists();
+  render();
 }
+
+function toggleLang(){
+  currentLang = currentLang === 'en' ? 'ar' : 'en';
+  localStorage.setItem(LANG_KEY, currentLang);
+  applyLang();
+}
+
+function toggleSection(name){
+  const sec = document.querySelector(`.section[data-section="${name}"]`);
+  if (sec) sec.classList.toggle('open');
+}
+function toggleAllSections(){
+  const sections = document.querySelectorAll('.section');
+  const anyClosed = [...sections].some(s => !s.classList.contains('open'));
+  sections.forEach(s => s.classList.toggle('open', anyClosed));
+}
+function toggleDropdown(id){
+  const dd = document.getElementById(id);
+  document.querySelectorAll('.dropdown').forEach(d => { if (d.id !== id) d.classList.remove('open'); });
+  dd.classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.dropdown')) {
+    document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
+function openModal(){ document.getElementById('aboutModal').classList.add('open'); }
+function closeModal(){ document.getElementById('aboutModal').classList.remove('open'); }
+
+function esc(s){
+  return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+// Like esc, but ALSO converts newlines/tabs to safe characters,
+// because raw \n in HTML attribute strings (placeholder, value) breaks the markup on some browsers.
+function escAttr(s){
+  return esc(s).replace(/\n/g, '&#10;').replace(/\r/g, '').replace(/\t/g, '&#9;');
+}
+function val(id){ return (document.getElementById(id)?.value || ''); }
+function setV(id, v){ const el = document.getElementById(id); if (el) el.value = v || ''; }
+
+function renderAllLists(){
+  renderExperienceList();
+  renderEducationList();
+  renderCoursesList();
+  renderCertsList();
+  renderCustomList();
+  renderOrderList();
+}
+
+function renderExperienceList(){
+  const wrap = document.getElementById('experienceList');
+  wrap.innerHTML = state.experience.map((it, i) => `
+    <div class="list-item">
+      <div class="field"><label><span>${t('company')}</span> <span class="star">*</span></label>
+        <input value="${esc(it.company)}" oninput="updateItem('experience',${i},'company',this.value)" /></div>
+      <div class="field"><label><span>${t('jobRole')}</span> <span class="star">*</span></label>
+        <input value="${esc(it.role)}" oninput="updateItem('experience',${i},'role',this.value)" /></div>
+      <div class="field"><label><span>${t('duration')}</span> <span class="star">*</span></label>
+        <input value="${esc(it.duration)}" placeholder="${esc(t('durationPh'))}" oninput="updateItem('experience',${i},'duration',this.value)" /></div>
+      <div class="field">
+        <label>${t('projects')}</label>
+        <button class="subadd-btn" onclick="addProject(${i})"><i class="fa-solid fa-plus"></i> ${t('addProject')}</button>
+        <div>
+          ${(it.projects||[]).map((p, pi) => `
+            <div class="subitem">
+              <button class="subremove" onclick="removeProject(${i},${pi})"><i class="fa-solid fa-xmark"></i></button>
+              <div class="field"><label>${t('projectName')}</label>
+                <input value="${esc(p.name)}" oninput="updateProject(${i},${pi},'name',this.value)" /></div>
+              <div class="field"><label>${t('projectDesc')}</label>
+                <input value="${esc(p.desc)}" oninput="updateProject(${i},${pi},'desc',this.value)" /></div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="field"><label>${t('responsibilities')}</label>
+        <textarea class="lined" placeholder="${escAttr(t('respPh'))}" oninput="updateItem('experience',${i},'desc',this.value)">${esc(it.desc)}</textarea>
+      </div>
+      <button class="remove-btn-block" onclick="removeItem('experience',${i})">
+        <i class="fa-solid fa-trash"></i> ${t('removeCompany')}
+      </button>
+    </div>
+  `).join('');
+}
+
+function renderEducationList(){
+  const wrap = document.getElementById('educationList');
+  wrap.innerHTML = state.education.map((it, i) => `
+    <div class="list-item">
+      <div class="field"><label><span>${t('degree')}</span> <span class="star">*</span></label>
+        <input value="${esc(it.degree)}" placeholder="Bachelor of Engineering, Master of Science.." oninput="updateItem('education',${i},'degree',this.value)" /></div>
+      <div class="field"><label><span>${t('institution')}</span> <span class="star">*</span></label>
+        <input value="${esc(it.school)}" oninput="updateItem('education',${i},'school',this.value)" /></div>
+      <div class="field"><label><span>${t('gradYear')}</span> <span class="star">*</span></label>
+        <input value="${esc(it.year)}" oninput="updateItem('education',${i},'year',this.value)" /></div>
+      <div class="field"><label>${t('eduDetails')}</label>
+        <textarea class="lined" placeholder="${escAttr(t('eduDetailsPh'))}" oninput="updateItem('education',${i},'details',this.value)">${esc(it.details)}</textarea>
+      </div>
+      <button class="remove-btn-block" onclick="removeItem('education',${i})">
+        <i class="fa-solid fa-trash"></i> ${t('remove')}
+      </button>
+    </div>
+  `).join('');
+}
+
+function renderCoursesList(){
+  const wrap = document.getElementById('coursesList');
+  wrap.innerHTML = state.courses.map((it, i) => `
+    <div class="list-item">
+      <div class="field"><label>${t('courseName')}</label>
+        <input value="${esc(it.name)}" oninput="updateItem('courses',${i},'name',this.value)" /></div>
+      <div class="field"><label>${t('provider')}</label>
+        <input value="${esc(it.provider)}" oninput="updateItem('courses',${i},'provider',this.value)" /></div>
+      <div class="field"><label>${t('year')}</label>
+        <input value="${esc(it.year)}" oninput="updateItem('courses',${i},'year',this.value)" /></div>
+      <button class="remove-btn-block" onclick="removeItem('courses',${i})">
+        <i class="fa-solid fa-trash"></i> ${t('remove')}
+      </button>
+    </div>
+  `).join('');
+}
+
+function renderCertsList(){
+  const wrap = document.getElementById('certsList');
+  wrap.innerHTML = state.certs.map((it, i) => `
+    <div class="list-item">
+      <div class="field"><label>${t('certName')}</label>
+        <input value="${esc(it.name)}" oninput="updateItem('certs',${i},'name',this.value)" /></div>
+      <div class="field"><label>${t('issuer')}</label>
+        <input value="${esc(it.issuer)}" oninput="updateItem('certs',${i},'issuer',this.value)" /></div>
+      <div class="field"><label>${t('dateIssued')}</label>
+        <input value="${esc(it.date)}" oninput="updateItem('certs',${i},'date',this.value)" /></div>
+      <div class="field"><label>${t('credId')}</label>
+        <input value="${esc(it.credId)}" placeholder="${t('credIdPh')}" oninput="updateItem('certs',${i},'credId',this.value)" /></div>
+      <button class="remove-btn-block" onclick="removeItem('certs',${i})">
+        <i class="fa-solid fa-trash"></i> ${t('remove')}
+      </button>
+    </div>
+  `).join('');
+}
+
+function renderCustomList(){
+  const wrap = document.getElementById('customList');
+  wrap.innerHTML = state.custom.map((it, i) => `
+    <div class="list-item">
+      <div class="field"><label>${currentLang==='ar'?'اسم القسم':'Section Title'}</label>
+        <input value="${esc(it.title)}" oninput="updateItem('custom',${i},'title',this.value)" /></div>
+      <div class="field"><label>${t('customContent')}</label>
+        <textarea class="lined" oninput="updateItem('custom',${i},'content',this.value)">${esc(it.content)}</textarea>
+      </div>
+      <button class="remove-btn-block" onclick="removeItem('custom',${i})">
+        <i class="fa-solid fa-trash"></i> ${t('remove')}
+      </button>
+    </div>
+  `).join('');
+}
+
+const ORDER_ICONS = { experience:'fa-briefcase', education:'fa-graduation-cap', personal:'fa-id-card', skills:'fa-gears', courses:'fa-book', certs:'fa-certificate', languages:'fa-language' };
+
+function renderOrderList(){
+  const wrap = document.getElementById('orderList');
+  const labels = i18n[currentLang].sectionLabels;
+  wrap.innerHTML = state.order.map((key, i) => `
+    <div class="reorder-item">
+      <div class="label"><i class="fa-solid ${ORDER_ICONS[key]}"></i> ${labels[key] || key}</div>
+      <div class="reorder-arrows">
+        <button class="arrow-btn" onclick="moveOrder(${i},-1)" ${i===0?'disabled':''}><i class="fa-solid fa-arrow-up"></i></button>
+        <button class="arrow-btn" onclick="moveOrder(${i},1)" ${i===state.order.length-1?'disabled':''}><i class="fa-solid fa-arrow-down"></i></button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addExperience(){ state.experience.push({company:'',role:'',duration:'',projects:[],desc:''}); renderExperienceList(); render(); }
+function addEducation(){ state.education.push({degree:'',school:'',year:'',details:''}); renderEducationList(); render(); }
+function addCourse(){ state.courses.push({name:'',provider:'',year:''}); renderCoursesList(); render(); }
+function addCert(){ state.certs.push({name:'',issuer:'',date:'',credId:''}); renderCertsList(); render(); }
+function addCustomSection(){
+  const title = document.getElementById('customTitle').value.trim();
+  if (!title) return;
+  state.custom.push({ title, content:'' });
+  document.getElementById('customTitle').value = '';
+  renderCustomList(); render();
+}
+function addProject(expIdx){
+  if (!state.experience[expIdx].projects) state.experience[expIdx].projects = [];
+  state.experience[expIdx].projects.push({ name:'', desc:'' });
+  renderExperienceList(); render();
+}
+function removeProject(expIdx, projIdx){
+  state.experience[expIdx].projects.splice(projIdx, 1);
+  renderExperienceList(); render();
+}
+function updateProject(expIdx, projIdx, key, v){
+  state.experience[expIdx].projects[projIdx][key] = v;
+  render();
+}
+function removeItem(section, idx){
+  state[section].splice(idx, 1);
+  renderAllLists();
+  render();
+}
+function updateItem(section, idx, key, v){
+  state[section][idx][key] = v;
+  render();
+}
+function moveOrder(idx, dir){
+  const ni = idx + dir;
+  if (ni < 0 || ni >= state.order.length) return;
+  const tmp = state.order[idx];
+  state.order[idx] = state.order[ni];
+  state.order[ni] = tmp;
+  renderOrderList();
+  render();
+}
+
+function syncBasic(){
+  state.basic.name = val('f_name').trim();
+  state.basic.title = val('f_title').trim();
+  state.basic.city = val('f_city').trim();
+  state.basic.phone = val('f_phone').trim();
+  state.basic.email = val('f_email').trim();
+  state.basic.linkedin = val('f_linkedin').trim();
+  state.basic.summary = val('f_summary').trim();
+
+  state.personal.dob = val('p_dob').trim();
+  state.personal.marital = val('p_marital');
+  state.personal.military = val('p_military');
+  state.personal.driver = val('p_driver');
+  state.personal.nationality = val('p_nationality').trim();
+
+  state.skills = val('f_skills');
+  state.languages = val('f_langs');
+  state.refsAvailable = document.getElementById('refsAvailable').checked;
+}
+function fillBasicInputs(){
+  setV('f_name', state.basic.name);
+  setV('f_title', state.basic.title);
+  setV('f_city', state.basic.city);
+  setV('f_phone', state.basic.phone);
+  setV('f_email', state.basic.email);
+  setV('f_linkedin', state.basic.linkedin);
+  setV('f_summary', state.basic.summary);
+  setV('p_dob', state.personal.dob);
+  setV('p_marital', state.personal.marital);
+  setV('p_military', state.personal.military);
+  setV('p_driver', state.personal.driver);
+  setV('p_nationality', state.personal.nationality);
+  setV('f_skills', state.skills);
+  setV('f_langs', state.languages);
+  document.getElementById('refsAvailable').checked = !!state.refsAvailable;
+}
+
+function renderSection(key){
+  if (key === 'experience' && state.experience.length){
+    let h = `<div class="cv-section"><div class="cv-section-heading">${t('expHead')}</div>`;
+    state.experience.forEach(e => {
+      const lines = (e.desc || '').split('\n').map(l => l.replace(/^[•\-\*]\s*/, '').trim()).filter(Boolean);
+      h += `
+        <div class="cv-entry">
+          <div class="cv-entry-head">
+            <div class="cv-entry-title">${esc(e.company)}</div>
+            <div class="cv-entry-date">${esc(e.duration)}</div>
+          </div>
+          ${e.role ? `<div class="cv-entry-sub">${esc(e.role)}</div>` : ''}
+          ${lines.length ? `<div><u>${t('responsibilitiesShort')}</u><ul>${lines.map(l=>`<li>${esc(l)}</li>`).join('')}</ul></div>` : ''}
+          ${(e.projects||[]).filter(p=>p.name||p.desc).length ? `<div class="cv-projects">${e.projects.filter(p=>p.name||p.desc).map(p=>`<div class="cv-project">▸ <b>${esc(p.name)}</b>${p.desc?': '+esc(p.desc):''}</div>`).join('')}</div>` : ''}
+        </div>`;
+    });
+    return h + `</div>`;
+  }
+  if (key === 'education' && state.education.length){
+    let h = `<div class="cv-section"><div class="cv-section-heading">${t('eduHead')}</div>`;
+    state.education.forEach(e => {
+      const dets = (e.details || '').split('\n').map(l => l.replace(/^[•\-\*]\s*/, '').trim()).filter(Boolean);
+      h += `
+        <div class="cv-entry">
+          <div class="cv-entry-head">
+            <div class="cv-entry-title">• ${esc(e.degree)}</div>
+            <div class="cv-entry-date">${t('graduationYear')}: ${esc(e.year)}</div>
+          </div>
+          ${e.school ? `<div class="cv-entry-sub">${esc(e.school)}</div>` : ''}
+          ${dets.length ? `<ul>${dets.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>` : ''}
+        </div>`;
+    });
+    return h + `</div>`;
+  }
+  if (key === 'personal'){
+    const p = state.personal;
+    const fields = [
+      [t('dob'), p.dob],
+      [t('marital'), p.marital],
+      [t('military'), p.military],
+      [t('driver'), p.driver],
+      [t('nationality'), p.nationality]
+    ].filter(([_, v]) => v);
+    if (!fields.length) return '';
+    return `<div class="cv-section"><div class="cv-section-heading">${t('persHead')}</div>
+      <div class="personal-grid">
+        ${fields.map(([k,v]) => `<div><b>${k}:</b> ${esc(v)}</div>`).join('')}
+      </div></div>`;
+  }
+  if (key === 'skills'){
+    const skills = (state.skills || '').split(',').map(s => s.trim()).filter(Boolean);
+    if (!skills.length) return '';
+    return `<div class="cv-section"><div class="cv-section-heading">${t('skillHead')}</div>
+      <div class="cv-skills-list">${skills.map(s => `<span class="cv-skill-tag">${esc(s)}</span>`).join('')}</div>
+    </div>`;
+  }
+  if (key === 'courses' && state.courses.length){
+    let h = `<div class="cv-section"><div class="cv-section-heading">${t('courseHead')}</div>`;
+    state.courses.forEach(c => {
+      h += `<div class="cv-entry">
+        <div class="cv-entry-head">
+          <div class="cv-entry-title">• ${esc(c.name)}</div>
+          <div class="cv-entry-date">${esc(c.year)}</div>
+        </div>
+        ${c.provider ? `<div class="cv-entry-sub">${esc(c.provider)}</div>` : ''}
+      </div>`;
+    });
+    return h + `</div>`;
+  }
+  if (key === 'certs' && state.certs.length){
+    let h = `<div class="cv-section"><div class="cv-section-heading">${t('certHead')}</div>`;
+    state.certs.forEach(c => {
+      h += `<div class="cv-entry">
+        <div class="cv-entry-head">
+          <div class="cv-entry-title">• ${esc(c.name)}</div>
+          <div class="cv-entry-date">${esc(c.date)}</div>
+        </div>
+        ${c.issuer ? `<div class="cv-entry-sub">${esc(c.issuer)}</div>` : ''}
+        ${c.credId ? `<div style="font-size:12px;color:#666">ID: ${esc(c.credId)}</div>` : ''}
+      </div>`;
+    });
+    return h + `</div>`;
+  }
+  if (key === 'languages'){
+    const langs = (state.languages || '').split(',').map(s => s.trim()).filter(Boolean);
+    if (!langs.length) return '';
+    return `<div class="cv-section"><div class="cv-section-heading">${t('langHead')}</div>
+      <div class="cv-langs-list">${langs.map(s => `<span class="cv-skill-tag">${esc(s)}</span>`).join('')}</div>
+    </div>`;
+  }
+  return '';
+}
+
+function render(){
+  syncBasic();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+
+  const b = state.basic;
+  const contacts = [b.city, b.email, b.phone].filter(Boolean).join(' • ');
+  const linkedinLine = b.linkedin ? `<div class="cv-contact-line">${esc(b.linkedin)}</div>` : '';
+
+  let html = `
+    <div class="cv-header">
+      <div class="cv-name">${esc(b.name) || (currentLang==='ar'?'الاسم الكامل':'YOUR NAME')}</div>
+      ${b.title ? `<div class="cv-title-line">${esc(b.title)}</div>` : ''}
+      ${contacts ? `<div class="cv-contact-line">${esc(contacts)}</div>` : ''}
+      ${linkedinLine}
+    </div>
+  `;
+
+  if (b.summary){
+    html += `
+      <div class="cv-section">
+        <div class="cv-section-heading">${t('profileSummary')}</div>
+        <div class="cv-summary">${esc(b.summary)}</div>
+      </div>`;
+  }
+
+  state.order.forEach(key => { html += renderSection(key); });
+
+  state.custom.forEach(c => {
+    if (!c.title && !c.content) return;
+    const lines = (c.content || '').split('\n').map(l => l.replace(/^[•\-\*]\s*/, '').trim()).filter(Boolean);
+    html += `<div class="cv-section">
+      <div class="cv-section-heading">${esc((c.title||'').toUpperCase())}</div>
+      ${lines.length ? `<ul style="margin-inline-start:18px">${lines.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>` : ''}
+    </div>`;
+  });
+
+  if (state.refsAvailable){
+    html += `<div class="cv-section">
+      <div class="cv-section-heading">${t('refHead')}</div>
+      <div class="cv-refs-note">${t('refsAvailableShort')}</div>
+    </div>`;
+  }
+
+  document.getElementById('cvPaper').innerHTML = html;
+}
+
+function saveCV(){
+  syncBasic();
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (state.basic.name || 'my_cv').replace(/\s+/g,'_') + '.cv.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function loadCV(ev){
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      state = { ...state, ...data };
+      const expected = ['experience','education','personal','skills','courses','certs','languages'];
+      if (!Array.isArray(state.order)) state.order = expected.slice();
+      expected.forEach(k => { if (!state.order.includes(k)) state.order.push(k); });
+      fillBasicInputs();
+      renderAllLists();
+      render();
+    } catch (err) { alert('Invalid CV file'); }
+  };
+  reader.readAsText(file);
+  ev.target.value = '';
+}
+function resetCV(){
+  if (!confirm(t('confirmReset'))) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = {
+    basic: { name:'', title:'', city:'', phone:'', email:'', linkedin:'', summary:'' },
+    experience: [], education: [],
+    personal: { dob:'', marital:'', military:'', driver:'', nationality:'' },
+    skills: '', courses: [], certs: [], languages: '', custom: [],
+    refsAvailable: false,
+    order: ['experience','education','personal','skills','courses','certs','languages']
+  };
+  fillBasicInputs();
+  renderAllLists();
+  render();
+}
+
+function loadSample(){
+  if (currentLang === 'ar'){
+    state = {
+      basic: {
+        name: 'سلطان عايد العتيبي',
+        title: 'محاضر بالمؤسسة العامة للتدريب التقني والمهني',
+        city: 'الرياض، المملكة العربية السعودية',
+        phone: '0560000000',
+        email: 'sultan@example.com',
+        linkedin: 'https://www.linkedin.com/in/sultan-ayed-6502aa156/',
+        summary: 'مهندس أمن سيبراني وباحث متخصص بخبرة 12 عامًا في التدريب التقني، مراجعة واعتماد البرامج التدريبية، وتطوير المحتوى الأكاديمي المتقدم. سجل مثبت في الجمع بين إدارة الجودة وتنفيذ المشاريع الرقمية، مع تركيز بحثي عميق على التشفير وخصوصية البيانات.'
+      },
+      experience: [{
+        company: 'المؤسسة العامة للتدريب التقني والمهني (TVTC)',
+        role: 'محاضر',
+        duration: 'ديسمبر 2018 - حتى الآن',
+        projects: [],
+        desc: 'عضو لجنة مراجعة وتقييم البرامج التدريبية\nتقديم برامج تدريبية تقنية متخصصة بالتعاون مع مركز "مبدعون" بجامعة الملك عبدالعزيز\nعضو الهيئة السعودية للمهندسين'
+      },{
+        company: 'بنك التنمية الاجتماعية', role: 'أخصائي تقني',
+        duration: '2013 - 2017', projects: [], desc: ''
+      }],
+      education: [{
+        degree: 'ماجستير العلوم', school: 'جامعة سيدني للتكنولوجيا',
+        year: '2025', details: ''
+      }],
+      personal: { dob:'23/12/1989', marital:'Married', military:'Completed', driver:'Yes', nationality:'سعودي' },
+      skills: 'الأمن السيبراني، التشفير، خصوصية البيانات، إدارة الجودة، تطوير المحتوى الأكاديمي، Python',
+      courses: [],
+      certs: [{ name: 'CISSP', issuer: 'ISC²', date: '2022', credId: '' }],
+      languages: 'العربية - اللغة الأم، الإنجليزية - بطلاقة',
+      custom: [],
+      refsAvailable: true,
+      order: ['experience','education','personal','skills','courses','certs','languages']
+    };
+  } else {
+    state = {
+      basic: {
+        name: 'SULTAN AYED AL-OTAIBI',
+        title: 'Lecturer at TVTC',
+        city: 'Riyadh, Saudi Arabia',
+        phone: '+966 56 0000000',
+        email: 'sultan@example.com',
+        linkedin: 'https://www.linkedin.com/in/sultan-ayed-6502aa156/',
+        summary: 'A dedicated Cybersecurity Engineer and Researcher with 12 years of combined professional and academic experience. Expert in delivering technical training, reviewing and accrediting training programs, and developing advanced academic content. Proven track record in bridging technical management with hands-on digital project execution, supported by a deep research focus on Cryptography and Data Privacy.'
+      },
+      experience: [{
+        company: 'TVTC', role: 'Lecturer',
+        duration: 'December 2018 - Present',
+        projects: [],
+        desc: 'Member of the Training Programs Review and Assessment Committee\nDelivered specialized technical training programs in collaboration with the "Mubdeoon" Center at King Abdulaziz University\nMember of the Saudi Council of Engineers'
+      },{
+        company: 'Social Development Bank', role: 'Technical Specialist',
+        duration: '2013 - 2017', projects: [], desc: ''
+      }],
+      education: [{
+        degree: 'Master of Science', school: 'University of Technology Sydney',
+        year: '2025', details: ''
+      }],
+      personal: { dob:'23/12/1989', marital:'Married', military:'Completed', driver:'Yes', nationality:'Saudi' },
+      skills: 'Cybersecurity, Cryptography, Data Privacy, Quality Management, Academic Content Development, Python',
+      courses: [],
+      certs: [{ name: 'CISSP', issuer: 'ISC²', date: '2022', credId: '' }],
+      languages: 'Arabic - Native, English - Fluent',
+      custom: [],
+      refsAvailable: true,
+      order: ['experience','education','personal','skills','courses','certs','languages']
+    };
+  }
+  fillBasicInputs();
+  renderAllLists();
+  render();
+  document.querySelectorAll('.section').forEach(s => s.classList.add('open'));
+}
+
+function downloadPDF(){
+  const el = document.getElementById('cvPaper');
+  const filename = ((state.basic.name || 'CV').replace(/\s+/g,'_')) + '.pdf';
+  const opt = {
+    margin: 10, filename,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  html2pdf().set(opt).from(el).save();
+}
+
+function init(){
+  // Try to load saved data, but never break if anything goes wrong
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const data = JSON.parse(saved);
+      // Only merge if data is actually an object
+      if (data && typeof data === 'object') {
+        state = { ...state, ...data };
+        // Ensure nested objects exist
+        if (!state.basic || typeof state.basic !== 'object') state.basic = { name:'', title:'', city:'', phone:'', email:'', linkedin:'', summary:'' };
+        if (!state.personal || typeof state.personal !== 'object') state.personal = { dob:'', marital:'', military:'', driver:'', nationality:'' };
+        if (!Array.isArray(state.experience)) state.experience = [];
+        if (!Array.isArray(state.education)) state.education = [];
+        if (!Array.isArray(state.courses)) state.courses = [];
+        if (!Array.isArray(state.certs)) state.certs = [];
+        if (!Array.isArray(state.custom)) state.custom = [];
+        if (typeof state.skills !== 'string') state.skills = '';
+        if (typeof state.languages !== 'string') state.languages = '';
+        const expected = ['experience','education','personal','skills','courses','certs','languages'];
+        if (!Array.isArray(state.order)) state.order = expected.slice();
+        expected.forEach(k => { if (!state.order.includes(k)) state.order.push(k); });
+        // Remove any unexpected keys from order
+        state.order = state.order.filter(k => expected.includes(k));
+      }
+    }
+  } catch(e) {
+    console.warn('Failed to load saved CV data, starting fresh:', e);
+    // Wipe corrupted storage
+    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+  }
+
+  try { fillBasicInputs(); } catch(e) { console.error('fillBasicInputs failed:', e); }
+  try { applyLang(); } catch(e) { console.error('applyLang failed:', e); }
+}
+
+// Run init after DOM is fully ready (just in case)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
+// Expose all the inline-handler functions to window explicitly,
+// so they're guaranteed to be callable from onclick attributes.
+window.toggleSection = toggleSection;
+window.toggleAllSections = toggleAllSections;
+window.toggleDropdown = toggleDropdown;
+window.toggleLang = toggleLang;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.saveCV = saveCV;
+window.loadCV = loadCV;
+window.resetCV = resetCV;
+window.loadSample = loadSample;
+window.downloadPDF = downloadPDF;
+window.addExperience = addExperience;
+window.addEducation = addEducation;
+window.addCourse = addCourse;
+window.addCert = addCert;
+window.addCustomSection = addCustomSection;
+window.addProject = addProject;
+window.removeProject = removeProject;
+window.updateProject = updateProject;
+window.removeItem = removeItem;
+window.updateItem = updateItem;
+window.moveOrder = moveOrder;
+window.render = render;
 </script>
 
 </body>
