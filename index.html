@@ -1,76 +1,624 @@
-# Free Professional CV Builder
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Free Professional CV Builder - Build your professional CV in minutes" />
+<title>Free Professional CV Builder</title>
 
-أداة احترافية لإنشاء السيرة الذاتية - ثنائية اللغة (عربي / إنجليزي).
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-A professional CV builder tool - bilingual (Arabic / English).
-
----
-
-## ✨ المميزات | Features
-
-- 🌐 **ثنائي اللغة** - تبديل فوري بين العربي والإنجليزي
-- 💾 **حفظ وتحميل** - احفظ بياناتك كملف JSON وحمّلها لاحقاً
-- 📄 **تنزيل PDF** - بضغطة زر
-- 🔄 **حفظ تلقائي** - في المتصفح (localStorage)
-- 📱 **يعمل على الجوال** - تصميم متجاوب
-- 🎨 **معاينة لحظية** - شاهد التغييرات مباشرة
-
----
-
-## 🚀 كيف ترفعه على GitHub Pages
-
-### الطريقة 1: من الموقع مباشرة
-
-1. روح على [github.com](https://github.com) وسجّل دخول
-2. اضغط على **+** فوق ثم اختر **New repository**
-3. سمّ المستودع باسم مثل `cv` أو `my-cv`
-4. اختر **Public** (مهم للنشر المجاني)
-5. علّم على ✅ **Add a README file**
-6. اضغط **Create repository**
-7. اضغط على **Add file** ← **Upload files**
-8. ارفع ملف `index.html`
-9. اضغط **Commit changes**
-
-### تفعيل GitHub Pages
-
-1. روح على **Settings** (في المستودع نفسه)
-2. من القائمة اليسار اضغط **Pages**
-3. تحت **Source** اختر **Deploy from a branch**
-4. اختر **main** و **/ (root)** ← اضغط **Save**
-5. انتظر دقيقة، الموقع راح يطلع لك على رابط مثل:
-   ```
-   https://YOUR_USERNAME.github.io/cv/
-   ```
-
----
-
-## 🔧 تخصيص الموقع
-
-افتح `index.html` بأي محرر نصوص:
-
-### تغيير الاسم في ترويسة الأداة
-- ابحث عن `Sultan` وغيّره لاسمك
-- ابحث عن `class="brand-logo">S<` وغيّر الحرف
-
-### تغيير الألوان
-في بداية ملف CSS داخل `<style>`:
-```css
+<style>
 :root {
-  --primary: #1f6f54;        /* اللون الأساسي */
-  --primary-dark: #155941;   /* داكن */
-  --primary-light: #2e8b6c;  /* فاتح */
-  --accent: #d4af37;         /* ذهبي */
+  --primary: #1f6f54;
+  --primary-dark: #155941;
+  --primary-light: #2e8b6c;
+  --primary-soft: #e8f3ee;
+  --accent: #d4af37;
+  --bg: #f4f7f6;
+  --panel: #ffffff;
+  --text: #1a2b25;
+  --text-soft: #5a6b66;
+  --border: #d8e2dd;
+  --shadow: 0 10px 30px rgba(31, 111, 84, 0.12);
+  --radius: 14px;
+  --danger: #e76470;
+  --danger-soft: #fceced;
 }
-```
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Inter', 'Cairo', sans-serif;
+  background: linear-gradient(135deg, #1f6f54 0%, #2e8b6c 100%);
+  min-height: 100vh; color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+body[dir="rtl"] { font-family: 'Cairo', 'Inter', sans-serif; }
 
----
+.app-header {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: #fff; padding: 14px 24px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+  position: sticky; top: 0; z-index: 100;
+}
+.brand { display: flex; align-items: center; gap: 12px; margin-inline-end: auto; }
+.brand-logo {
+  width: 48px; height: 48px;
+  background: var(--accent); color: var(--primary-dark);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-weight: 800; font-size: 20px;
+  font-family: 'Playfair Display', serif;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.brand-text h1 { font-size: 18px; font-weight: 700; letter-spacing: 0.3px; }
+.brand-text p { font-size: 11px; opacity: 0.85; letter-spacing: 1.2px; text-transform: uppercase; }
+.header-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn {
+  border: 0; cursor: pointer;
+  padding: 10px 16px; border-radius: 10px;
+  font-weight: 600; font-size: 14px;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s;
+  font-family: inherit; white-space: nowrap;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.18); }
+.btn:active { transform: translateY(0); }
+.btn-light { background: rgba(255,255,255,0.14); color: #fff; backdrop-filter: blur(4px); }
+.btn-light:hover { background: rgba(255,255,255,0.24); }
+.btn-warn { background: #ffd54a; color: #3a2a00; }
+.btn-lang { background: var(--accent); color: var(--primary-dark); font-weight: 700; }
 
-## 📦 المحتويات
+.dropdown { position: relative; }
+.dropdown-menu {
+  position: absolute; top: calc(100% + 6px); inset-inline-start: 0;
+  background: #fff; color: var(--text);
+  border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  min-width: 200px; display: none; overflow: hidden; z-index: 200;
+}
+.dropdown.open .dropdown-menu { display: block; }
+.dropdown-menu button {
+  width: 100%; background: none; border: 0;
+  text-align: start; padding: 12px 16px; cursor: pointer;
+  font-size: 14px; display: flex; align-items: center; gap: 10px;
+  font-family: inherit; color: var(--text);
+}
+.dropdown-menu button:hover { background: var(--primary-soft); }
 
-- `index.html` - الموقع كامل (HTML + CSS + JavaScript في ملف واحد)
+.app-main {
+  display: grid; grid-template-columns: minmax(320px, 480px) 1fr;
+  gap: 20px; padding: 20px;
+  max-width: 1500px; margin: 0 auto;
+}
+@media (max-width: 980px) { .app-main { grid-template-columns: 1fr; } }
+.panel {
+  background: var(--panel); border-radius: var(--radius);
+  box-shadow: var(--shadow); overflow: hidden;
+  max-height: calc(100vh - 110px);
+  display: flex; flex-direction: column;
+}
+.editor-panel { padding: 24px; overflow-y: auto; }
+.editor-brand { text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 18px; margin-bottom: 18px; }
+.editor-brand .crest {
+  width: 76px; height: 76px; margin: 0 auto 8px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: var(--accent); border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700; font-size: 26px;
+  box-shadow: 0 6px 18px rgba(31,111,84,0.3);
+  border: 3px solid var(--accent);
+}
+.editor-brand .by-line { font-size: 16px; color: var(--text); margin-top: 6px; }
+.editor-brand .by-line a { color: var(--primary); font-weight: 700; text-decoration: none; }
+.editor-brand .by-line a:hover { text-decoration: underline; }
+.editor-brand .sponsored { font-size: 14px; font-weight: 600; color: var(--text-soft); margin-top: 4px; }
+.editor-brand .version { font-size: 12px; color: var(--text-soft); opacity: 0.85; margin-top: 2px; }
 
-ما يحتاج أي build process أو dependencies. يشتغل مباشرة.
+.notice {
+  background: var(--primary-soft);
+  border-inline-start: 4px solid var(--primary);
+  padding: 12px 14px; border-radius: 8px;
+  margin-bottom: 18px;
+  font-size: 13px; line-height: 1.6; color: var(--text);
+}
+.notice i { color: var(--primary); margin: 0 4px; }
 
----
+.section { margin-bottom: 10px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+.section-head {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #fff; border: 0;
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer;
+  font-weight: 600; font-size: 15px;
+  font-family: inherit; text-align: start;
+}
+.section-head .chev { margin-inline-start: auto; transition: transform 0.25s ease; }
+.section.open .section-head .chev { transform: rotate(90deg); }
+body[dir="rtl"] .section.open .section-head .chev { transform: rotate(-90deg); }
+.section-body { display: none; padding: 16px; background: #fff; }
+.section.open .section-body { display: block; }
 
-صنع بـ ❤️ بواسطة سلطان
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.field label .star { color: var(--danger); }
+.hint { display: block; font-size: 11px; color: var(--text-soft); margin-top: 4px; }
+.field input, .field textarea, .field select {
+  width: 100%; padding: 10px 12px;
+  border: 1px solid var(--border); border-radius: 8px;
+  font-size: 14px; font-family: inherit;
+  background: #fafdfc;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  color: var(--text);
+}
+.field input:focus, .field textarea:focus, .field select:focus {
+  outline: 0; border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(31,111,84,0.15);
+  background: #fff;
+}
+.field textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+.field textarea.lined { font-family: 'Courier New', monospace; font-size: 13px; }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
+
+.list-item {
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px; margin-bottom: 12px;
+  background: #fcfdfc;
+}
+.remove-btn-block {
+  background: var(--danger-soft); color: #b3343c;
+  border: 1px solid #f0c4c8;
+  padding: 7px 14px; border-radius: 6px; cursor: pointer;
+  font-size: 13px; font-weight: 600;
+  font-family: inherit;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.remove-btn-block:hover { background: #fbdbdf; }
+
+.add-btn {
+  background: #2dbb86; color: #fff; border: 0;
+  padding: 9px 18px; border-radius: 6px; cursor: pointer;
+  font-weight: 600; font-size: 13px; font-family: inherit;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.add-btn:hover { background: #25a274; }
+
+.subadd-btn {
+  width: 100%; background: var(--primary); color: #fff;
+  border: 0; padding: 8px; border-radius: 6px; cursor: pointer;
+  font-weight: 600; font-size: 13px; font-family: inherit;
+  margin-bottom: 8px;
+}
+.subadd-btn:hover { background: var(--primary-dark); }
+
+.subitem {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 6px; padding: 10px; margin-bottom: 8px;
+  position: relative;
+}
+.subitem .subremove {
+  position: absolute; top: 6px; inset-inline-end: 6px;
+  background: transparent; border: 0;
+  color: var(--danger); cursor: pointer; font-size: 14px;
+}
+
+.checkbox-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 4px; font-size: 14px; cursor: pointer;
+}
+.checkbox-row input { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); }
+
+.custom-add-row { display: flex; gap: 8px; }
+.custom-add-row input { flex: 1; }
+
+.reorder-item {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 12px; margin-bottom: 6px;
+}
+.reorder-item .label { flex: 1; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.reorder-arrows { display: flex; gap: 4px; }
+.arrow-btn {
+  width: 32px; height: 32px;
+  background: var(--primary); color: #fff;
+  border: 0; border-radius: 6px; cursor: pointer; font-size: 12px;
+}
+.arrow-btn:hover { background: var(--primary-dark); }
+.arrow-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+.preview-panel { padding: 24px; overflow-y: auto; }
+.preview-title {
+  text-align: center; margin-bottom: 16px;
+  font-size: 20px; font-weight: 700;
+  color: var(--text); letter-spacing: 0.4px;
+}
+.preview-title::after {
+  content: ""; display: block;
+  width: 60px; height: 3px;
+  background: var(--accent); margin: 8px auto 0;
+  border-radius: 2px;
+}
+.cv-paper {
+  background: #fff; padding: 40px 48px; min-height: 800px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08); border-radius: 6px;
+  font-family: 'Georgia', 'Cairo', serif;
+  font-size: 13.5px; line-height: 1.65; color: #222;
+}
+.cv-header { text-align: center; margin-bottom: 18px; }
+.cv-name {
+  font-family: 'Playfair Display', 'Cairo', serif;
+  font-size: 26px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.cv-title-line { font-size: 14px; font-style: italic; color: #444; margin-bottom: 6px; }
+.cv-contact-line { font-size: 12.5px; color: #555; word-break: break-word; }
+.cv-section { margin-top: 20px; }
+.cv-section-heading {
+  font-family: 'Playfair Display', 'Cairo', serif;
+  font-size: 14px; font-weight: 700;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  border-bottom: 1.5px solid #222;
+  padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-summary { text-align: justify; }
+.cv-entry { margin-bottom: 14px; }
+.cv-entry-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.cv-entry-title { font-weight: 700; }
+.cv-entry-date { font-weight: 700; white-space: nowrap; }
+.cv-entry-sub { font-style: italic; color: #444; margin-bottom: 4px; }
+.cv-entry ul { margin-inline-start: 18px; margin-top: 4px; }
+.cv-entry ul li { margin-bottom: 2px; }
+.cv-projects { margin-inline-start: 18px; margin-top: 6px; }
+.cv-project { margin-bottom: 4px; }
+.cv-skills-list, .cv-langs-list { line-height: 1.9; }
+.cv-skill-tag {
+  display: inline-block;
+  margin: 2px 4px 2px 0;
+  padding: 2px 8px;
+  background: #f0f0f0; border-radius: 3px; font-size: 12.5px;
+}
+.personal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 24px; }
+.personal-grid div b { display: inline-block; min-width: 110px; }
+.cv-refs-note { font-style: italic; color: #444; }
+
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(15, 30, 25, 0.6);
+  backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center;
+  z-index: 1000; padding: 20px;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  background: #fff; max-width: 540px; width: 100%;
+  border-radius: 14px; padding: 28px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.modal h3 {
+  font-size: 20px; margin-bottom: 12px;
+  color: var(--primary-dark);
+  display: flex; align-items: center; gap: 10px;
+}
+.modal p { margin-bottom: 14px; line-height: 1.7; color: var(--text-soft); font-size: 14px; }
+.modal ul { margin-inline-start: 20px; margin-bottom: 14px; font-size: 14px; line-height: 1.8; }
+.modal-close {
+  display: block; margin-inline-start: auto;
+  background: var(--primary); color: #fff;
+  border: 0; padding: 10px 22px; border-radius: 8px;
+  font-weight: 600; cursor: pointer; font-family: inherit;
+}
+
+@media print {
+  body { background: #fff; }
+  .app-header, .editor-panel, .preview-title { display: none !important; }
+  .app-main { display: block; padding: 0; }
+  .panel.preview-panel { box-shadow: none; max-height: none; padding: 0; }
+  .cv-paper { box-shadow: none; padding: 30px; }
+}
+.panel::-webkit-scrollbar { width: 8px; }
+.panel::-webkit-scrollbar-track { background: #f0f0f0; }
+.panel::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
+
+body[dir="rtl"] .cv-paper, body[dir="rtl"] .cv-name, body[dir="rtl"] .cv-section-heading { font-family: 'Cairo', serif; }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <div class="brand-logo">S</div>
+    <div class="brand-text">
+      <h1 data-i18n="appTitle">Free Professional CV Builder</h1>
+      <p data-i18n="appTagline">BUILD YOUR PROFESSIONAL CV IN MINUTES</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="dropdown" id="fileDropdown">
+      <button class="btn btn-light" onclick="toggleDropdown('fileDropdown')">
+        <i class="fa-regular fa-file"></i> <span data-i18n="file">File</span>
+        <i class="fa-solid fa-caret-down"></i>
+      </button>
+      <div class="dropdown-menu">
+        <button onclick="saveCV()"><i class="fa-solid fa-floppy-disk"></i> <span data-i18n="saveCv">Save CV</span></button>
+        <button onclick="document.getElementById('loadInput').click()"><i class="fa-solid fa-folder-open"></i> <span data-i18n="loadCv">Load CV</span></button>
+        <button onclick="resetCV()"><i class="fa-solid fa-rotate-left"></i> <span data-i18n="resetCv">Reset</span></button>
+      </div>
+    </div>
+    <input type="file" id="loadInput" accept=".json" style="display:none" onchange="loadCV(event)" />
+    <button class="btn btn-light" onclick="toggleAllSections()"><i class="fa-regular fa-eye"></i> <span data-i18n="expandCollapse">Sections Expand/Collapse</span></button>
+    <button class="btn btn-light" onclick="downloadPDF()"><i class="fa-solid fa-download"></i> <span data-i18n="downloadCv">Download CV</span></button>
+    <button class="btn btn-light" onclick="openModal()"><i class="fa-regular fa-circle-question"></i> <span data-i18n="about">About</span></button>
+    <button class="btn btn-warn" onclick="loadSample()"><i class="fa-solid fa-file-import"></i> <span data-i18n="loadSample">Load Sample CV</span></button>
+    <button class="btn btn-lang" onclick="toggleLang()"><i class="fa-solid fa-language"></i> <span id="langLabel">عربي</span></button>
+  </div>
+</header>
+
+<main class="app-main">
+  <section class="panel editor-panel">
+    <div class="editor-brand">
+      <div class="crest">S</div>
+      <div class="by-line">
+        <span data-i18n="by">By:</span>
+        <a href="https://www.linkedin.com/in/sultan-ayed-6502aa156/" target="_blank" rel="noopener">SULTAN AYED</a>
+        <a href="https://www.linkedin.com/in/sultan-ayed-6502aa156/" target="_blank" rel="noopener" title="LinkedIn" style="color:#0a66c2;margin-inline-start:6px;text-decoration:none;">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+      </div>
+      <div class="sponsored" data-i18n="sponsored">Personal CV Builder</div>
+      <div class="version" data-i18n="version">Version: 1.1.0</div>
+    </div>
+
+    <div class="notice">
+      <i class="fa-regular fa-circle-info"></i>
+      <span data-i18n="noticeText">After entering your information, you can save all CV data (File → Save CV). This allows you to import it again later for any future modifications.</span>
+    </div>
+
+    <!-- Basic Info -->
+    <div class="section open" data-section="basic">
+      <button class="section-head" onclick="toggleSection('basic')">
+        <i class="fa-solid fa-user"></i>
+        <span data-i18n="basicInfo">Basic Information</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div class="field"><label><span data-i18n="fullName">Full Name</span> <span class="star">*</span></label>
+          <input type="text" id="f_name" oninput="render()" /></div>
+        <div class="field"><label><span data-i18n="jobTitle">Current Position Title</span> <span class="star">*</span></label>
+          <input type="text" id="f_title" oninput="render()" /></div>
+        <div class="field"><label><span data-i18n="email">Email</span> <span class="star">*</span></label>
+          <input type="email" id="f_email" oninput="render()" /></div>
+        <div class="field"><label><span data-i18n="phone">Phone Number</span> <span class="star">*</span></label>
+          <input type="text" id="f_phone" oninput="render()" />
+          <span class="hint" data-i18n="phoneHint">(Country Code) (Phone Number)</span></div>
+        <div class="field"><label><span data-i18n="address">Current Address</span> <span class="star">*</span></label>
+          <input type="text" id="f_city" oninput="render()" />
+          <span class="hint" data-i18n="addressHint">City, Region, Country</span></div>
+        <div class="field"><label data-i18n="linkedin">LinkedIn Profile link</label>
+          <input type="text" id="f_linkedin" oninput="render()" /></div>
+        <div class="field"><label><span data-i18n="summary">CV Summary</span> <span class="star">*</span></label>
+          <textarea id="f_summary" oninput="render()"></textarea></div>
+      </div>
+    </div>
+
+    <!-- Experience -->
+    <div class="section" data-section="experience">
+      <button class="section-head" onclick="toggleSection('experience')">
+        <i class="fa-solid fa-briefcase"></i>
+        <span data-i18n="experience">Professional Experience</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div id="experienceList"></div>
+        <button class="add-btn" onclick="addExperience()">
+          <i class="fa-solid fa-plus"></i> <span data-i18n="addExperience">Add Experience</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="section" data-section="education">
+      <button class="section-head" onclick="toggleSection('education')">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <span data-i18n="education">Education</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div id="educationList"></div>
+        <button class="add-btn" onclick="addEducation()">
+          <i class="fa-solid fa-plus"></i> <span data-i18n="addEducation">Add Education</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Personal -->
+    <div class="section" data-section="personal">
+      <button class="section-head" onclick="toggleSection('personal')">
+        <i class="fa-solid fa-id-card"></i>
+        <span data-i18n="personal">Personal Details</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div class="field"><label data-i18n="dob">Date of Birth</label>
+          <input id="p_dob" placeholder="DD/MM/YYYY" oninput="render()" /></div>
+        <div class="field"><label data-i18n="marital">Marital Status</label>
+          <select id="p_marital" onchange="render()">
+            <option value=""></option>
+            <option value="Single" data-i18n-opt="single">Single</option>
+            <option value="Married" data-i18n-opt="married">Married</option>
+            <option value="Divorced" data-i18n-opt="divorced">Divorced</option>
+            <option value="Widowed" data-i18n-opt="widowed">Widowed</option>
+          </select></div>
+        <div class="field"><label data-i18n="military">Military Status</label>
+          <select id="p_military" onchange="render()">
+            <option value=""></option>
+            <option value="Completed" data-i18n-opt="completed">Completed</option>
+            <option value="Exempted" data-i18n-opt="exempted">Exempted</option>
+            <option value="Postponed" data-i18n-opt="postponed">Postponed</option>
+            <option value="Not Applicable" data-i18n-opt="notapplicable">Not Applicable</option>
+          </select></div>
+        <div class="field"><label data-i18n="driver">Driver License</label>
+          <select id="p_driver" onchange="render()">
+            <option value=""></option>
+            <option value="Yes" data-i18n-opt="yes">Yes</option>
+            <option value="No" data-i18n-opt="no">No</option>
+          </select></div>
+        <div class="field"><label data-i18n="nationality">Citizenship</label>
+          <input id="p_nationality" oninput="render()" /></div>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="section" data-section="skills">
+      <button class="section-head" onclick="toggleSection('skills')">
+        <i class="fa-solid fa-gears"></i>
+        <span data-i18n="skills">Technical Skills</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div class="field"><label data-i18n="skillsLabel">Skills - separate with comma (,)</label>
+          <textarea id="f_skills" oninput="render()" placeholder="Project Management, Python, Data Analysis"></textarea></div>
+      </div>
+    </div>
+
+    <!-- Courses -->
+    <div class="section" data-section="courses">
+      <button class="section-head" onclick="toggleSection('courses')">
+        <i class="fa-solid fa-book"></i>
+        <span data-i18n="courses">Professional Courses</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div id="coursesList"></div>
+        <button class="add-btn" onclick="addCourse()">
+          <i class="fa-solid fa-plus"></i> <span data-i18n="addCourse">Add Course</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Certs -->
+    <div class="section" data-section="certs">
+      <button class="section-head" onclick="toggleSection('certs')">
+        <i class="fa-solid fa-certificate"></i>
+        <span data-i18n="certs">Professional Certificates</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div id="certsList"></div>
+        <button class="add-btn" onclick="addCert()">
+          <i class="fa-solid fa-plus"></i> <span data-i18n="addCert">Add Certificate</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Languages -->
+    <div class="section" data-section="languages">
+      <button class="section-head" onclick="toggleSection('languages')">
+        <i class="fa-solid fa-language"></i>
+        <span data-i18n="languages">Language Skills</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div class="field"><label data-i18n="langsLabel">Languages and Proficiency - separate with comma (,)</label>
+          <textarea id="f_langs" oninput="render()" placeholder="Arabic - Native, English - Fluent"></textarea></div>
+      </div>
+    </div>
+
+    <!-- Custom -->
+    <div class="section" data-section="custom">
+      <button class="section-head" onclick="toggleSection('custom')">
+        <i class="fa-solid fa-circle-plus"></i>
+        <span data-i18n="custom">Custom Sections</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <div class="custom-add-row">
+          <input id="customTitle" placeholder="Section Title (e.g., Volunteer Experience)" />
+          <button class="add-btn" onclick="addCustomSection()">
+            <i class="fa-solid fa-plus"></i> <span data-i18n="addSection">Add Section</span>
+          </button>
+        </div>
+        <div id="customList" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <!-- References -->
+    <div class="section" data-section="references">
+      <button class="section-head" onclick="toggleSection('references')">
+        <i class="fa-solid fa-user-group"></i>
+        <span data-i18n="references">References</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body">
+        <label class="checkbox-row">
+          <input type="checkbox" id="refsAvailable" onchange="render()" />
+          <span data-i18n="refsAvailable">Include "References available upon request" at the end of CV</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Order -->
+    <div class="section" data-section="order">
+      <button class="section-head" onclick="toggleSection('order')">
+        <i class="fa-solid fa-sort"></i>
+        <span data-i18n="adjustOrder">Adjust CV Sections Order</span>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </button>
+      <div class="section-body"><div id="orderList"></div></div>
+    </div>
+
+  </section>
+
+  <section class="panel preview-panel">
+    <h2 class="preview-title" data-i18n="preview">Your CV Preview</h2>
+    <div id="cvPaper" class="cv-paper"></div>
+  </section>
+</main>
+
+<div class="modal-backdrop" id="aboutModal" onclick="if(event.target.id==='aboutModal') closeModal()">
+  <div class="modal">
+    <h3><i class="fa-regular fa-circle-question"></i> <span data-i18n="aboutTitle">About</span></h3>
+    <p data-i18n="aboutP1">A free, professional CV builder. Fill in your information and watch your CV update live, then download a clean PDF version ready to share.</p>
+    <ul>
+      <li data-i18n="aboutF1">Two languages: English and Arabic.</li>
+      <li data-i18n="aboutF2">Save and load all your data locally as a JSON file.</li>
+      <li data-i18n="aboutF3">Clean, ATS-friendly PDF output.</li>
+      <li data-i18n="aboutF4">Customize every section with custom sections and reordering.</li>
+    </ul>
+    <p data-i18n="aboutMade">Made with ❤️ by SULTAN AYED.</p>
+    <button class="modal-close" onclick="closeModal()" data-i18n="close">Close</button>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'cv_builder_data_v2';
+const LANG_KEY = 'cv_builder_lang';
+
+let state = {
+  basic: { name:'', title:'', city:'', phone:'', email:'', linkedin:'', summary:'' },
+  experience: [],
+  education: [],
+  personal: { dob:'', marital:'', military:'', driver:'', nationality:'' },
+  skills: '',
+  courses: [],
+  certs: [],
+  languages: '',
+  custom: [],
+  refsAvailable: false,
+  order: ['experience','education','personal','skills','courses','certs','languages']
+};
+
+let currentLang = localStorage.getItem(LANG_KEY) || 'en';
+
+const i18n = {
+  en: {
+    appTitle:'Free Professional CV 
