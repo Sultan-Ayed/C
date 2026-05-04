@@ -95,22 +95,27 @@ body[dir="rtl"] { font-family: 'Cairo', 'Inter', sans-serif; }
   gap: 20px; padding: 20px;
   max-width: 1500px; margin: 0 auto;
 }
-@media (max-width: 980px) { .app-main { grid-template-columns: 1fr; } }
 .panel {
   background: var(--panel); border-radius: var(--radius);
-  box-shadow: var(--shadow); overflow: hidden;
+  box-shadow: var(--shadow);
   display: flex; flex-direction: column;
 }
-/* On wide screens, keep both panels independently scrollable */
+
+/* ===== DESKTOP (>= 981px): two columns, each panel scrolls internally ===== */
 @media (min-width: 981px) {
-  .panel { max-height: calc(100vh - 110px); }
+  .panel { max-height: calc(100vh - 110px); overflow: hidden; }
+  .editor-panel { padding: 24px; overflow-y: auto; }
+  .preview-panel { padding: 24px; overflow-y: auto; }
 }
-/* On narrow/mobile screens, let the page itself scroll so sections expand fully */
+
+/* ===== MOBILE (<= 980px): single column, page itself scrolls naturally ===== */
 @media (max-width: 980px) {
-  .panel { max-height: none; }
-  .editor-panel, .preview-panel { overflow: visible; }
+  .app-main { grid-template-columns: 1fr; padding: 12px; gap: 14px; }
+  .panel { max-height: none !important; overflow: visible !important; }
+  .editor-panel { padding: 16px; overflow: visible !important; }
+  .preview-panel { padding: 16px; overflow: visible !important; }
+  .cv-paper { padding: 24px 18px; }
 }
-.editor-panel { padding: 24px; overflow-y: auto; }
 .editor-brand { text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 18px; margin-bottom: 18px; }
 .editor-brand .crest {
   width: 76px; height: 76px; margin: 0 auto 8px;
@@ -246,7 +251,6 @@ body[dir="rtl"] .section.open .section-head .chev { transform: rotate(-90deg); }
 .arrow-btn:hover { background: var(--primary-dark); }
 .arrow-btn:disabled { background: #ccc; cursor: not-allowed; }
 
-.preview-panel { padding: 24px; overflow-y: auto; }
 .preview-title {
   text-align: center; margin-bottom: 16px;
   font-size: 20px; font-weight: 700;
