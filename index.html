@@ -621,4 +621,731 @@ let currentLang = localStorage.getItem(LANG_KEY) || 'en';
 
 const i18n = {
   en: {
-    appTitle:'Free Professional CV 
+    appTitle:'Free Professional CV Builder', appTagline:'BUILD YOUR PROFESSIONAL CV IN MINUTES',
+    file:'File', saveCv:'Save CV', loadCv:'Load CV', resetCv:'Reset',
+    expandCollapse:'Sections Expand/Collapse', downloadCv:'Download CV',
+    about:'About', loadSample:'Load Sample CV',
+    by:'By:', sponsored:'Personal CV Builder', version:'Version: 1.1.0',
+    noticeText:'After entering your information, you can save all CV data (File → Save CV). This allows you to import it again later for any future modifications.',
+    basicInfo:'Basic Information', experience:'Professional Experience', education:'Education',
+    personal:'Personal Details', skills:'Technical Skills', courses:'Professional Courses',
+    certs:'Professional Certificates', languages:'Language Skills', custom:'Custom Sections',
+    references:'References', adjustOrder:'Adjust CV Sections Order',
+    fullName:'Full Name', jobTitle:'Current Position Title', address:'Current Address',
+    phone:'Phone Number', email:'Email',
+    phoneHint:'(Country Code) (Phone Number)', addressHint:'City, Region, Country',
+    summary:'CV Summary', linkedin:'LinkedIn Profile link',
+    addExperience:'Add Experience', addEducation:'Add Education',
+    addCourse:'Add Course', addCert:'Add Certificate', addSection:'Add Section', addProject:'Add Project',
+    dob:'Date of Birth', marital:'Marital Status', military:'Military Status',
+    driver:'Driver License', nationality:'Citizenship',
+    single:'Single', married:'Married', divorced:'Divorced', widowed:'Widowed',
+    completed:'Completed', exempted:'Exempted', postponed:'Postponed', notapplicable:'Not Applicable',
+    yes:'Yes', no:'No',
+    skillsLabel:'Skills - separate with comma (,)',
+    langsLabel:'Languages and Proficiency - separate with comma (,)',
+    refsAvailable:'Include "References available upon request" at the end of CV',
+    refsAvailableShort:'References available upon request.',
+    preview:'Your CV Preview',
+    profileSummary:'PROFILE SUMMARY', expHead:'PROFESSIONAL EXPERIENCE', eduHead:'EDUCATION',
+    persHead:'PERSONAL DETAILS', skillHead:'TECHNICAL SKILLS', courseHead:'PROFESSIONAL COURSES',
+    certHead:'PROFESSIONAL CERTIFICATES', langHead:'LANGUAGE SKILLS', refHead:'REFERENCES',
+    company:'Company Name', jobRole:'Job Title', duration:'Duration (From - to)',
+    durationPh:'Jan 2020 - Present',
+    projects:'Projects (Optional)', projectName:'Project Name', projectDesc:'Description',
+    responsibilities:'Responsibilities (one per line)', responsibilitiesShort:'Responsibilities:',
+    respPh:'• Your job duties\n• Your main tasks',
+    removeCompany:'Remove Company', remove:'Remove',
+    institution:'Institution Name', degree:'Degree', gradYear:'Graduation Year',
+    eduDetails:'Additional details (one per line, will show as bullet points)',
+    eduDetailsPh:'• Major: Engineering Management\n• Graduation Project: Smart City\n• Relevant Coursework: Project Management',
+    courseName:'Course Title', provider:'Provider/Institution', year:'Year/Date',
+    certName:'Certificate Title', issuer:'Issuing Organization', dateIssued:'Date Issued',
+    credId:'Credential ID (optional)', credIdPh:'e.g., ABC123456789',
+    customTitle:'Section Title (e.g., Volunteer Experience)',
+    customContent:'Content (one item per line)',
+    aboutTitle:'About this Tool',
+    aboutP1:'A free, professional CV builder. Fill in your information and watch your CV update live, then download a clean PDF version ready to share.',
+    aboutF1:'Two languages: English and Arabic.',
+    aboutF2:'Save and load all your data locally as a JSON file.',
+    aboutF3:'Clean, ATS-friendly PDF output.',
+    aboutF4:'Customize every section with custom sections and reordering.',
+    aboutMade:'Made with ❤️ by SULTAN AYED.',
+    close:'Close',
+    confirmReset:'Reset all data? This cannot be undone.',
+    graduationYear:'Graduation Year',
+    sectionLabels:{ experience:'Professional Experience', education:'Education', personal:'Personal Details', skills:'Technical Skills', courses:'Courses', certs:'Professional Certificates', languages:'Languages' }
+  },
+  ar: {
+    appTitle:'منشئ السيرة الذاتية الاحترافي المجاني', appTagline:'أنشئ سيرتك الذاتية الاحترافية في دقائق',
+    file:'ملف', saveCv:'حفظ السيرة', loadCv:'تحميل السيرة', resetCv:'إعادة ضبط',
+    expandCollapse:'توسيع/طي الأقسام', downloadCv:'تنزيل السيرة',
+    about:'حول', loadSample:'تحميل نموذج',
+    by:'بواسطة:', sponsored:'منشئ السيرة الشخصية', version:'الإصدار: 1.1.0',
+    noticeText:'بعد إدخال معلوماتك، يمكنك حفظ جميع بيانات السيرة الذاتية (ملف ← حفظ السيرة). يتيح لك ذلك استيرادها مرة أخرى لاحقًا لإجراء أي تعديلات مستقبلية.',
+    basicInfo:'المعلومات الأساسية', experience:'الخبرات المهنية', education:'المؤهلات العلمية',
+    personal:'البيانات الشخصية', skills:'المهارات التقنية', courses:'الدورات المهنية',
+    certs:'الشهادات المهنية', languages:'المهارات اللغوية', custom:'أقسام مخصصة',
+    references:'المعرّفون', adjustOrder:'ترتيب أقسام السيرة',
+    fullName:'الاسم الكامل', jobTitle:'المسمى الوظيفي الحالي', address:'العنوان الحالي',
+    phone:'رقم الجوال', email:'البريد الإلكتروني',
+    phoneHint:'(رمز الدولة) (رقم الجوال)', addressHint:'المدينة، المنطقة، الدولة',
+    summary:'الملخص الشخصي', linkedin:'رابط لينكدإن',
+    addExperience:'إضافة خبرة', addEducation:'إضافة مؤهل',
+    addCourse:'إضافة دورة', addCert:'إضافة شهادة', addSection:'إضافة قسم', addProject:'إضافة مشروع',
+    dob:'تاريخ الميلاد', marital:'الحالة الاجتماعية', military:'الحالة العسكرية',
+    driver:'رخصة قيادة', nationality:'الجنسية',
+    single:'أعزب', married:'متزوج', divorced:'مطلق', widowed:'أرمل',
+    completed:'منتهية', exempted:'معفى', postponed:'مؤجلة', notapplicable:'لا ينطبق',
+    yes:'نعم', no:'لا',
+    skillsLabel:'المهارات - افصل بفاصلة (،)',
+    langsLabel:'اللغات ومستوى الإتقان - افصل بفاصلة (،)',
+    refsAvailable:'إضافة "تتوفر المعرّفات عند الطلب" في نهاية السيرة',
+    refsAvailableShort:'تتوفر المعرّفات عند الطلب.',
+    preview:'معاينة السيرة الذاتية',
+    profileSummary:'الملخص الشخصي', expHead:'الخبرات المهنية', eduHead:'المؤهلات العلمية',
+    persHead:'البيانات الشخصية', skillHead:'المهارات التقنية', courseHead:'الدورات المهنية',
+    certHead:'الشهادات المهنية', langHead:'المهارات اللغوية', refHead:'المعرّفون',
+    company:'اسم الجهة', jobRole:'المسمى الوظيفي', duration:'المدة (من - إلى)',
+    durationPh:'يناير 2020 - حتى الآن',
+    projects:'المشاريع (اختياري)', projectName:'اسم المشروع', projectDesc:'الوصف',
+    responsibilities:'المسؤوليات (كل بند في سطر)', responsibilitiesShort:'المسؤوليات:',
+    respPh:'• مهامك الوظيفية\n• مسؤولياتك الرئيسية',
+    removeCompany:'حذف الجهة', remove:'حذف',
+    institution:'اسم المؤسسة التعليمية', degree:'الدرجة العلمية', gradYear:'سنة التخرج',
+    eduDetails:'تفاصيل إضافية (كل بند في سطر، تظهر كنقاط)',
+    eduDetailsPh:'• التخصص: إدارة هندسية\n• مشروع التخرج: مدينة ذكية\n• المواد ذات الصلة: إدارة المشاريع',
+    courseName:'اسم الدورة', provider:'الجهة المانحة', year:'السنة/التاريخ',
+    certName:'اسم الشهادة', issuer:'الجهة المُصدِرة', dateIssued:'تاريخ الإصدار',
+    credId:'رقم الاعتماد (اختياري)', credIdPh:'مثال: ABC123456789',
+    customTitle:'اسم القسم (مثل: العمل التطوعي)',
+    customContent:'المحتوى (كل بند في سطر)',
+    aboutTitle:'حول هذه الأداة',
+    aboutP1:'منشئ سيرة ذاتية احترافي ومجاني. املأ بياناتك وشاهد السيرة تتحدّث مباشرة، ثم نزّل نسخة PDF نظيفة جاهزة للمشاركة.',
+    aboutF1:'لغتان: العربية والإنجليزية.',
+    aboutF2:'احفظ بياناتك وحمّلها لاحقًا كملف JSON محلي.',
+    aboutF3:'مخرجات PDF نظيفة ومتوافقة مع أنظمة الفرز.',
+    aboutF4:'خصّص كل قسم بحرية كاملة مع أقسام مخصصة وإعادة ترتيب.',
+    aboutMade:'صُنع بـ ❤️ بواسطة سلطان عايد.',
+    close:'إغلاق',
+    confirmReset:'إعادة ضبط جميع البيانات؟ لا يمكن التراجع.',
+    graduationYear:'سنة التخرج',
+    sectionLabels:{ experience:'الخبرات المهنية', education:'المؤهلات العلمية', personal:'البيانات الشخصية', skills:'المهارات التقنية', courses:'الدورات', certs:'الشهادات المهنية', languages:'اللغات' }
+  }
+};
+
+function t(key){ return i18n[currentLang][key] || key; }
+
+function applyLang(){
+  document.documentElement.lang = currentLang === 'ar' ? 'ar' : 'en';
+  document.body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+  document.getElementById('langLabel').textContent = currentLang === 'ar' ? 'EN' : 'عربي';
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (i18n[currentLang][key]) el.textContent = i18n[currentLang][key];
+  });
+  document.querySelectorAll('[data-i18n-opt]').forEach(el => {
+    const key = el.getAttribute('data-i18n-opt');
+    if (i18n[currentLang][key]) el.textContent = i18n[currentLang][key];
+  });
+
+  const skTa = document.getElementById('f_skills');
+  if (skTa) skTa.placeholder = currentLang==='ar' ? 'إدارة المشاريع، بايثون، تحليل البيانات' : 'Project Management, Python, Data Analysis';
+  const lgTa = document.getElementById('f_langs');
+  if (lgTa) lgTa.placeholder = currentLang==='ar' ? 'العربية - اللغة الأم، الإنجليزية - بطلاقة' : 'Arabic - Native, English - Fluent';
+  const cTitle = document.getElementById('customTitle');
+  if (cTitle) cTitle.placeholder = t('customTitle');
+
+  renderAllLists();
+  render();
+}
+
+function toggleLang(){
+  currentLang = currentLang === 'en' ? 'ar' : 'en';
+  localStorage.setItem(LANG_KEY, currentLang);
+  applyLang();
+}
+
+function toggleSection(name){
+  const sec = document.querySelector(`.section[data-section="${name}"]`);
+  if (sec) sec.classList.toggle('open');
+}
+function toggleAllSections(){
+  const sections = document.querySelectorAll('.section');
+  const anyClosed = [...sections].some(s => !s.classList.contains('open'));
+  sections.forEach(s => s.classList.toggle('open', anyClosed));
+}
+function toggleDropdown(id){
+  const dd = document.getElementById(id);
+  document.querySelectorAll('.dropdown').forEach(d => { if (d.id !== id) d.classList.remove('open'); });
+  dd.classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.dropdown')) {
+    document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
+function openModal(){ document.getElementById('aboutModal').classList.add('open'); }
+function closeModal(){ document.getElementById('aboutModal').classList.remove('open'); }
+
+function esc(s){
+  return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function val(id){ return (document.getElementById(id)?.value || ''); }
+function setV(id, v){ const el = document.getElementById(id); if (el) el.value = v || ''; }
+
+function renderAllLists(){
+  renderExperienceList();
+  renderEducationList();
+  renderCoursesList();
+  renderCertsList();
+  renderCustomList();
+  renderOrderList();
+}
+
+function renderExperienceList(){
+  const wrap = document.getElementById('experienceList');
+  wrap.innerHTML = state.experience.map((it, i) => `
+    <div class="list-item">
+      <div class="field"><label><span>${t('company')}</span> <span class="star">*</span></label>
+        <input value="${esc(it.company)}" oninput="updateItem('experience',${i},'company',this.value)" /></div>
+      <div class="field"><label><span>${t('jobRole')}</span> <span class="star">*</span></label>
+        <input value="${esc(it.role)}" oninput="updateItem('experience',${i},'role',this.value)" /></div>
+      <div class="field"><label><span>${t('duration')}</span> <span class="star">*</span></label>
+        <input value="${esc(it.duration)}" placeholder="${t('durationPh')}" oninput="updateItem('experience',${i},'duration',this.value)" /></div>
+      <div class="field">
+        <label>${t('projects')}</label>
+        <button class="subadd-btn" onclick="addProject(${i})"><i class="fa-solid fa-plus"></i> ${t('addProject')}</button>
+        <div>
+          ${(it.projects||[]).map((p, pi) => `
+            <div class="subitem">
+              <button class="subremove" onclick="removeProject(${i},${pi})"><i class="fa-solid fa-xmark"></i></button>
+              <div class="field"><label>${t('projectName')}</label>
+                <input value="${esc(p.name)}" oninput="updateProject(${i},${pi},'name',this.value)" /></div>
+              <div class="field"><label>${t('projectDesc')}</label>
+                <input value="${esc(p.desc)}" oninput="updateProject(${i},${pi},'desc',this.value)" /></div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="field"><label>${t('responsibilities')}</label>
+        <textarea class="lined" placeholder="${esc(t('respPh'))}" oninput="updateItem('experience',${i},'desc',this.value)">${esc(it.desc)}</textarea>
+      </div>
+      <button class="remove-btn-block" onclick="removeItem('experience',${i})">
+        <i class="fa-solid fa-trash"></i> ${t('removeCompany')}
+      </button>
+    </div>
+  `).join('');
+}
+
+function renderEducationList(){
+  const wrap = document.getElementById('educationList');
+  wrap.innerHTML = state.education.map((it, i) => `
+    <div class="list-item">
+      <div class="field"><label><span>${t('degree')}</span> <span class="star">*</span></label>
+        <input value="${esc(it.degree)}" placeholder="Bachelor of Engineering, Master of Science.." oninput="updateItem('education',${i},'degree',this.value)" /></div>
+      <div class="field"><label><span>${t('institution')}</span> <span class="star">*</span></label>
+        <input value="${esc(it.school)}" oninput="updateItem('education',${i},'school',this.value)" /></div>
+      <div class="field"><label><span>${t('gradYear')}</span> <span class="star">*</span></label>
+        <input value="${esc(it.year)}" oninput="updateItem('education',${i},'year',this.value)" /></div>
+      <div class="field"><label>${t('eduDetails')}</label>
+        <textarea class="lined" placeholder="${esc(t('eduDetailsPh'))}" oninput="updateItem('education',${i},'details',this.value)">${esc(it.details)}</textarea>
+      </div>
+      <button class="remove-btn-block" onclick="removeItem('education',${i})">
+        <i class="fa-solid fa-trash"></i> ${t('remove')}
+      </button>
+    </div>
+  `).join('');
+}
+
+function renderCoursesList(){
+  const wrap = document.getElementById('coursesList');
+  wrap.innerHTML = state.courses.map((it, i) => `
+    <div class="list-item">
+      <div class="field"><label>${t('courseName')}</label>
+        <input value="${esc(it.name)}" oninput="updateItem('courses',${i},'name',this.value)" /></div>
+      <div class="field"><label>${t('provider')}</label>
+        <input value="${esc(it.provider)}" oninput="updateItem('courses',${i},'provider',this.value)" /></div>
+      <div class="field"><label>${t('year')}</label>
+        <input value="${esc(it.year)}" oninput="updateItem('courses',${i},'year',this.value)" /></div>
+      <button class="remove-btn-block" onclick="removeItem('courses',${i})">
+        <i class="fa-solid fa-trash"></i> ${t('remove')}
+      </button>
+    </div>
+  `).join('');
+}
+
+function renderCertsList(){
+  const wrap = document.getElementById('certsList');
+  wrap.innerHTML = state.certs.map((it, i) => `
+    <div class="list-item">
+      <div class="field"><label>${t('certName')}</label>
+        <input value="${esc(it.name)}" oninput="updateItem('certs',${i},'name',this.value)" /></div>
+      <div class="field"><label>${t('issuer')}</label>
+        <input value="${esc(it.issuer)}" oninput="updateItem('certs',${i},'issuer',this.value)" /></div>
+      <div class="field"><label>${t('dateIssued')}</label>
+        <input value="${esc(it.date)}" oninput="updateItem('certs',${i},'date',this.value)" /></div>
+      <div class="field"><label>${t('credId')}</label>
+        <input value="${esc(it.credId)}" placeholder="${t('credIdPh')}" oninput="updateItem('certs',${i},'credId',this.value)" /></div>
+      <button class="remove-btn-block" onclick="removeItem('certs',${i})">
+        <i class="fa-solid fa-trash"></i> ${t('remove')}
+      </button>
+    </div>
+  `).join('');
+}
+
+function renderCustomList(){
+  const wrap = document.getElementById('customList');
+  wrap.innerHTML = state.custom.map((it, i) => `
+    <div class="list-item">
+      <div class="field"><label>${currentLang==='ar'?'اسم القسم':'Section Title'}</label>
+        <input value="${esc(it.title)}" oninput="updateItem('custom',${i},'title',this.value)" /></div>
+      <div class="field"><label>${t('customContent')}</label>
+        <textarea class="lined" oninput="updateItem('custom',${i},'content',this.value)">${esc(it.content)}</textarea>
+      </div>
+      <button class="remove-btn-block" onclick="removeItem('custom',${i})">
+        <i class="fa-solid fa-trash"></i> ${t('remove')}
+      </button>
+    </div>
+  `).join('');
+}
+
+const ORDER_ICONS = { experience:'fa-briefcase', education:'fa-graduation-cap', personal:'fa-id-card', skills:'fa-gears', courses:'fa-book', certs:'fa-certificate', languages:'fa-language' };
+
+function renderOrderList(){
+  const wrap = document.getElementById('orderList');
+  const labels = i18n[currentLang].sectionLabels;
+  wrap.innerHTML = state.order.map((key, i) => `
+    <div class="reorder-item">
+      <div class="label"><i class="fa-solid ${ORDER_ICONS[key]}"></i> ${labels[key] || key}</div>
+      <div class="reorder-arrows">
+        <button class="arrow-btn" onclick="moveOrder(${i},-1)" ${i===0?'disabled':''}><i class="fa-solid fa-arrow-up"></i></button>
+        <button class="arrow-btn" onclick="moveOrder(${i},1)" ${i===state.order.length-1?'disabled':''}><i class="fa-solid fa-arrow-down"></i></button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addExperience(){ state.experience.push({company:'',role:'',duration:'',projects:[],desc:''}); renderExperienceList(); render(); }
+function addEducation(){ state.education.push({degree:'',school:'',year:'',details:''}); renderEducationList(); render(); }
+function addCourse(){ state.courses.push({name:'',provider:'',year:''}); renderCoursesList(); render(); }
+function addCert(){ state.certs.push({name:'',issuer:'',date:'',credId:''}); renderCertsList(); render(); }
+function addCustomSection(){
+  const title = document.getElementById('customTitle').value.trim();
+  if (!title) return;
+  state.custom.push({ title, content:'' });
+  document.getElementById('customTitle').value = '';
+  renderCustomList(); render();
+}
+function addProject(expIdx){
+  if (!state.experience[expIdx].projects) state.experience[expIdx].projects = [];
+  state.experience[expIdx].projects.push({ name:'', desc:'' });
+  renderExperienceList(); render();
+}
+function removeProject(expIdx, projIdx){
+  state.experience[expIdx].projects.splice(projIdx, 1);
+  renderExperienceList(); render();
+}
+function updateProject(expIdx, projIdx, key, v){
+  state.experience[expIdx].projects[projIdx][key] = v;
+  render();
+}
+function removeItem(section, idx){
+  state[section].splice(idx, 1);
+  renderAllLists();
+  render();
+}
+function updateItem(section, idx, key, v){
+  state[section][idx][key] = v;
+  render();
+}
+function moveOrder(idx, dir){
+  const ni = idx + dir;
+  if (ni < 0 || ni >= state.order.length) return;
+  const tmp = state.order[idx];
+  state.order[idx] = state.order[ni];
+  state.order[ni] = tmp;
+  renderOrderList();
+  render();
+}
+
+function syncBasic(){
+  state.basic.name = val('f_name').trim();
+  state.basic.title = val('f_title').trim();
+  state.basic.city = val('f_city').trim();
+  state.basic.phone = val('f_phone').trim();
+  state.basic.email = val('f_email').trim();
+  state.basic.linkedin = val('f_linkedin').trim();
+  state.basic.summary = val('f_summary').trim();
+
+  state.personal.dob = val('p_dob').trim();
+  state.personal.marital = val('p_marital');
+  state.personal.military = val('p_military');
+  state.personal.driver = val('p_driver');
+  state.personal.nationality = val('p_nationality').trim();
+
+  state.skills = val('f_skills');
+  state.languages = val('f_langs');
+  state.refsAvailable = document.getElementById('refsAvailable').checked;
+}
+function fillBasicInputs(){
+  setV('f_name', state.basic.name);
+  setV('f_title', state.basic.title);
+  setV('f_city', state.basic.city);
+  setV('f_phone', state.basic.phone);
+  setV('f_email', state.basic.email);
+  setV('f_linkedin', state.basic.linkedin);
+  setV('f_summary', state.basic.summary);
+  setV('p_dob', state.personal.dob);
+  setV('p_marital', state.personal.marital);
+  setV('p_military', state.personal.military);
+  setV('p_driver', state.personal.driver);
+  setV('p_nationality', state.personal.nationality);
+  setV('f_skills', state.skills);
+  setV('f_langs', state.languages);
+  document.getElementById('refsAvailable').checked = !!state.refsAvailable;
+}
+
+function renderSection(key){
+  if (key === 'experience' && state.experience.length){
+    let h = `<div class="cv-section"><div class="cv-section-heading">${t('expHead')}</div>`;
+    state.experience.forEach(e => {
+      const lines = (e.desc || '').split('\n').map(l => l.replace(/^[•\-\*]\s*/, '').trim()).filter(Boolean);
+      h += `
+        <div class="cv-entry">
+          <div class="cv-entry-head">
+            <div class="cv-entry-title">${esc(e.company)}</div>
+            <div class="cv-entry-date">${esc(e.duration)}</div>
+          </div>
+          ${e.role ? `<div class="cv-entry-sub">${esc(e.role)}</div>` : ''}
+          ${lines.length ? `<div><u>${t('responsibilitiesShort')}</u><ul>${lines.map(l=>`<li>${esc(l)}</li>`).join('')}</ul></div>` : ''}
+          ${(e.projects||[]).filter(p=>p.name||p.desc).length ? `<div class="cv-projects">${e.projects.filter(p=>p.name||p.desc).map(p=>`<div class="cv-project">▸ <b>${esc(p.name)}</b>${p.desc?': '+esc(p.desc):''}</div>`).join('')}</div>` : ''}
+        </div>`;
+    });
+    return h + `</div>`;
+  }
+  if (key === 'education' && state.education.length){
+    let h = `<div class="cv-section"><div class="cv-section-heading">${t('eduHead')}</div>`;
+    state.education.forEach(e => {
+      const dets = (e.details || '').split('\n').map(l => l.replace(/^[•\-\*]\s*/, '').trim()).filter(Boolean);
+      h += `
+        <div class="cv-entry">
+          <div class="cv-entry-head">
+            <div class="cv-entry-title">• ${esc(e.degree)}</div>
+            <div class="cv-entry-date">${t('graduationYear')}: ${esc(e.year)}</div>
+          </div>
+          ${e.school ? `<div class="cv-entry-sub">${esc(e.school)}</div>` : ''}
+          ${dets.length ? `<ul>${dets.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>` : ''}
+        </div>`;
+    });
+    return h + `</div>`;
+  }
+  if (key === 'personal'){
+    const p = state.personal;
+    const fields = [
+      [t('dob'), p.dob],
+      [t('marital'), p.marital],
+      [t('military'), p.military],
+      [t('driver'), p.driver],
+      [t('nationality'), p.nationality]
+    ].filter(([_, v]) => v);
+    if (!fields.length) return '';
+    return `<div class="cv-section"><div class="cv-section-heading">${t('persHead')}</div>
+      <div class="personal-grid">
+        ${fields.map(([k,v]) => `<div><b>${k}:</b> ${esc(v)}</div>`).join('')}
+      </div></div>`;
+  }
+  if (key === 'skills'){
+    const skills = (state.skills || '').split(',').map(s => s.trim()).filter(Boolean);
+    if (!skills.length) return '';
+    return `<div class="cv-section"><div class="cv-section-heading">${t('skillHead')}</div>
+      <div class="cv-skills-list">${skills.map(s => `<span class="cv-skill-tag">${esc(s)}</span>`).join('')}</div>
+    </div>`;
+  }
+  if (key === 'courses' && state.courses.length){
+    let h = `<div class="cv-section"><div class="cv-section-heading">${t('courseHead')}</div>`;
+    state.courses.forEach(c => {
+      h += `<div class="cv-entry">
+        <div class="cv-entry-head">
+          <div class="cv-entry-title">• ${esc(c.name)}</div>
+          <div class="cv-entry-date">${esc(c.year)}</div>
+        </div>
+        ${c.provider ? `<div class="cv-entry-sub">${esc(c.provider)}</div>` : ''}
+      </div>`;
+    });
+    return h + `</div>`;
+  }
+  if (key === 'certs' && state.certs.length){
+    let h = `<div class="cv-section"><div class="cv-section-heading">${t('certHead')}</div>`;
+    state.certs.forEach(c => {
+      h += `<div class="cv-entry">
+        <div class="cv-entry-head">
+          <div class="cv-entry-title">• ${esc(c.name)}</div>
+          <div class="cv-entry-date">${esc(c.date)}</div>
+        </div>
+        ${c.issuer ? `<div class="cv-entry-sub">${esc(c.issuer)}</div>` : ''}
+        ${c.credId ? `<div style="font-size:12px;color:#666">ID: ${esc(c.credId)}</div>` : ''}
+      </div>`;
+    });
+    return h + `</div>`;
+  }
+  if (key === 'languages'){
+    const langs = (state.languages || '').split(',').map(s => s.trim()).filter(Boolean);
+    if (!langs.length) return '';
+    return `<div class="cv-section"><div class="cv-section-heading">${t('langHead')}</div>
+      <div class="cv-langs-list">${langs.map(s => `<span class="cv-skill-tag">${esc(s)}</span>`).join('')}</div>
+    </div>`;
+  }
+  return '';
+}
+
+function render(){
+  syncBasic();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+
+  const b = state.basic;
+  const contacts = [b.city, b.email, b.phone].filter(Boolean).join(' • ');
+  const linkedinLine = b.linkedin ? `<div class="cv-contact-line">${esc(b.linkedin)}</div>` : '';
+
+  let html = `
+    <div class="cv-header">
+      <div class="cv-name">${esc(b.name) || (currentLang==='ar'?'الاسم الكامل':'YOUR NAME')}</div>
+      ${b.title ? `<div class="cv-title-line">${esc(b.title)}</div>` : ''}
+      ${contacts ? `<div class="cv-contact-line">${esc(contacts)}</div>` : ''}
+      ${linkedinLine}
+    </div>
+  `;
+
+  if (b.summary){
+    html += `
+      <div class="cv-section">
+        <div class="cv-section-heading">${t('profileSummary')}</div>
+        <div class="cv-summary">${esc(b.summary)}</div>
+      </div>`;
+  }
+
+  state.order.forEach(key => { html += renderSection(key); });
+
+  state.custom.forEach(c => {
+    if (!c.title && !c.content) return;
+    const lines = (c.content || '').split('\n').map(l => l.replace(/^[•\-\*]\s*/, '').trim()).filter(Boolean);
+    html += `<div class="cv-section">
+      <div class="cv-section-heading">${esc((c.title||'').toUpperCase())}</div>
+      ${lines.length ? `<ul style="margin-inline-start:18px">${lines.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>` : ''}
+    </div>`;
+  });
+
+  if (state.refsAvailable){
+    html += `<div class="cv-section">
+      <div class="cv-section-heading">${t('refHead')}</div>
+      <div class="cv-refs-note">${t('refsAvailableShort')}</div>
+    </div>`;
+  }
+
+  document.getElementById('cvPaper').innerHTML = html;
+}
+
+function saveCV(){
+  syncBasic();
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (state.basic.name || 'my_cv').replace(/\s+/g,'_') + '.cv.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function loadCV(ev){
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      state = { ...state, ...data };
+      const expected = ['experience','education','personal','skills','courses','certs','languages'];
+      if (!Array.isArray(state.order)) state.order = expected.slice();
+      expected.forEach(k => { if (!state.order.includes(k)) state.order.push(k); });
+      fillBasicInputs();
+      renderAllLists();
+      render();
+    } catch (err) { alert('Invalid CV file'); }
+  };
+  reader.readAsText(file);
+  ev.target.value = '';
+}
+function resetCV(){
+  if (!confirm(t('confirmReset'))) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = {
+    basic: { name:'', title:'', city:'', phone:'', email:'', linkedin:'', summary:'' },
+    experience: [], education: [],
+    personal: { dob:'', marital:'', military:'', driver:'', nationality:'' },
+    skills: '', courses: [], certs: [], languages: '', custom: [],
+    refsAvailable: false,
+    order: ['experience','education','personal','skills','courses','certs','languages']
+  };
+  fillBasicInputs();
+  renderAllLists();
+  render();
+}
+
+function loadSample(){
+  if (currentLang === 'ar'){
+    state = {
+      basic: {
+        name: 'سلطان عايد العتيبي',
+        title: 'محاضر بالمؤسسة العامة للتدريب التقني والمهني',
+        city: 'الرياض، المملكة العربية السعودية',
+        phone: '0560000000',
+        email: 'sultan@example.com',
+        linkedin: 'https://www.linkedin.com/in/sultan-ayed-6502aa156/',
+        summary: 'مهندس أمن سيبراني وباحث متخصص بخبرة 12 عامًا في التدريب التقني، مراجعة واعتماد البرامج التدريبية، وتطوير المحتوى الأكاديمي المتقدم. سجل مثبت في الجمع بين إدارة الجودة وتنفيذ المشاريع الرقمية، مع تركيز بحثي عميق على التشفير وخصوصية البيانات.'
+      },
+      experience: [{
+        company: 'المؤسسة العامة للتدريب التقني والمهني (TVTC)',
+        role: 'محاضر',
+        duration: 'ديسمبر 2018 - حتى الآن',
+        projects: [],
+        desc: 'عضو لجنة مراجعة وتقييم البرامج التدريبية\nتقديم برامج تدريبية تقنية متخصصة بالتعاون مع مركز "مبدعون" بجامعة الملك عبدالعزيز\nعضو الهيئة السعودية للمهندسين'
+      },{
+        company: 'بنك التنمية الاجتماعية', role: 'أخصائي تقني',
+        duration: '2013 - 2017', projects: [], desc: ''
+      }],
+      education: [{
+        degree: 'ماجستير العلوم', school: 'جامعة سيدني للتكنولوجيا',
+        year: '2025', details: ''
+      }],
+      personal: { dob:'23/12/1989', marital:'Married', military:'Completed', driver:'Yes', nationality:'سعودي' },
+      skills: 'الأمن السيبراني، التشفير، خصوصية البيانات، إدارة الجودة، تطوير المحتوى الأكاديمي، Python',
+      courses: [],
+      certs: [{ name: 'CISSP', issuer: 'ISC²', date: '2022', credId: '' }],
+      languages: 'العربية - اللغة الأم، الإنجليزية - بطلاقة',
+      custom: [],
+      refsAvailable: true,
+      order: ['experience','education','personal','skills','courses','certs','languages']
+    };
+  } else {
+    state = {
+      basic: {
+        name: 'SULTAN AYED AL-OTAIBI',
+        title: 'Lecturer at TVTC',
+        city: 'Riyadh, Saudi Arabia',
+        phone: '+966 56 0000000',
+        email: 'sultan@example.com',
+        linkedin: 'https://www.linkedin.com/in/sultan-ayed-6502aa156/',
+        summary: 'A dedicated Cybersecurity Engineer and Researcher with 12 years of combined professional and academic experience. Expert in delivering technical training, reviewing and accrediting training programs, and developing advanced academic content. Proven track record in bridging technical management with hands-on digital project execution, supported by a deep research focus on Cryptography and Data Privacy.'
+      },
+      experience: [{
+        company: 'TVTC', role: 'Lecturer',
+        duration: 'December 2018 - Present',
+        projects: [],
+        desc: 'Member of the Training Programs Review and Assessment Committee\nDelivered specialized technical training programs in collaboration with the "Mubdeoon" Center at King Abdulaziz University\nMember of the Saudi Council of Engineers'
+      },{
+        company: 'Social Development Bank', role: 'Technical Specialist',
+        duration: '2013 - 2017', projects: [], desc: ''
+      }],
+      education: [{
+        degree: 'Master of Science', school: 'University of Technology Sydney',
+        year: '2025', details: ''
+      }],
+      personal: { dob:'23/12/1989', marital:'Married', military:'Completed', driver:'Yes', nationality:'Saudi' },
+      skills: 'Cybersecurity, Cryptography, Data Privacy, Quality Management, Academic Content Development, Python',
+      courses: [],
+      certs: [{ name: 'CISSP', issuer: 'ISC²', date: '2022', credId: '' }],
+      languages: 'Arabic - Native, English - Fluent',
+      custom: [],
+      refsAvailable: true,
+      order: ['experience','education','personal','skills','courses','certs','languages']
+    };
+  }
+  fillBasicInputs();
+  renderAllLists();
+  render();
+  document.querySelectorAll('.section').forEach(s => s.classList.add('open'));
+}
+
+function downloadPDF(){
+  const el = document.getElementById('cvPaper');
+  const filename = ((state.basic.name || 'CV').replace(/\s+/g,'_')) + '.pdf';
+  const opt = {
+    margin: 10, filename,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  html2pdf().set(opt).from(el).save();
+}
+
+function init(){
+  // Try to load saved data, but never break if anything goes wrong
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const data = JSON.parse(saved);
+      // Only merge if data is actually an object
+      if (data && typeof data === 'object') {
+        state = { ...state, ...data };
+        // Ensure nested objects exist
+        if (!state.basic || typeof state.basic !== 'object') state.basic = { name:'', title:'', city:'', phone:'', email:'', linkedin:'', summary:'' };
+        if (!state.personal || typeof state.personal !== 'object') state.personal = { dob:'', marital:'', military:'', driver:'', nationality:'' };
+        if (!Array.isArray(state.experience)) state.experience = [];
+        if (!Array.isArray(state.education)) state.education = [];
+        if (!Array.isArray(state.courses)) state.courses = [];
+        if (!Array.isArray(state.certs)) state.certs = [];
+        if (!Array.isArray(state.custom)) state.custom = [];
+        if (typeof state.skills !== 'string') state.skills = '';
+        if (typeof state.languages !== 'string') state.languages = '';
+        const expected = ['experience','education','personal','skills','courses','certs','languages'];
+        if (!Array.isArray(state.order)) state.order = expected.slice();
+        expected.forEach(k => { if (!state.order.includes(k)) state.order.push(k); });
+        // Remove any unexpected keys from order
+        state.order = state.order.filter(k => expected.includes(k));
+      }
+    }
+  } catch(e) {
+    console.warn('Failed to load saved CV data, starting fresh:', e);
+    // Wipe corrupted storage
+    try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+  }
+
+  try { fillBasicInputs(); } catch(e) { console.error('fillBasicInputs failed:', e); }
+  try { applyLang(); } catch(e) { console.error('applyLang failed:', e); }
+}
+
+// Run init after DOM is fully ready (just in case)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
+// Expose all the inline-handler functions to window explicitly,
+// so they're guaranteed to be callable from onclick attributes.
+window.toggleSection = toggleSection;
+window.toggleAllSections = toggleAllSections;
+window.toggleDropdown = toggleDropdown;
+window.toggleLang = toggleLang;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.saveCV = saveCV;
+window.loadCV = loadCV;
+window.resetCV = resetCV;
+window.loadSample = loadSample;
+window.downloadPDF = downloadPDF;
+window.addExperience = addExperience;
+window.addEducation = addEducation;
+window.addCourse = addCourse;
+window.addCert = addCert;
+window.addCustomSection = addCustomSection;
+window.addProject = addProject;
+window.removeProject = removeProject;
+window.updateProject = updateProject;
+window.removeItem = removeItem;
+window.updateItem = updateItem;
+window.moveOrder = moveOrder;
+window.render = render;
+</script>
+
+</body>
+</html>
