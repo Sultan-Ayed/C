@@ -142,8 +142,9 @@ body[dir="rtl"] { font-family: 'Cairo', 'Inter', sans-serif; }
 }
 .notice i { color: var(--primary); margin: 0 4px; }
 
-.section { margin-bottom: 10px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+.section { margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--border); }
 .section-head {
+  border-radius: 9px;  /* closed sections: fully rounded */
   width: 100%;
   background: linear-gradient(135deg, var(--primary), var(--primary-light));
   color: #fff; border: 0;
@@ -153,6 +154,7 @@ body[dir="rtl"] { font-family: 'Cairo', 'Inter', sans-serif; }
   font-weight: 600; font-size: 15px;
   font-family: inherit; text-align: start;
 }
+.section.open .section-head { border-radius: 9px 9px 0 0; } /* open: only top rounded */
 .section-head .chev { margin-inline-start: auto; transition: transform 0.25s ease; }
 .section.open .section-head .chev { transform: rotate(90deg); }
 body[dir="rtl"] .section.open .section-head .chev { transform: rotate(-90deg); }
