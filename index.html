@@ -1304,17 +1304,20 @@ function printPDF(){
   const cv = document.getElementById('cvPaper');
   if (!cv) return;
 
-  // Build a hidden iframe to host the printable HTML
-  const iframe = document.createElement('iframe');
-  iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;';
-  document.body.appendChild(iframe);
-
-  const doc = iframe.contentDocument || iframe.contentWindow.document;
   const isAr = (document.body.dir === 'rtl');
   const fname = ((state.basic.name || 'CV').replace(/\s+/g,'_'));
 
-  doc.open();
-  doc.write(`<!doctype html>
+  // Open a new window, write the printable HTML there, and call print().
+  // Using a real window (not iframe) avoids many "blank PDF" bugs with print + iframe.
+  const w = window.open('', '_blank', 'width=900,height=1100');
+  if (!w) {
+    alert(isAr
+      ? 'الرجاء السماح بفتح النوافذ المنبثقة لهذا الموقع، ثم حاول مرة أخرى.'
+      : 'Please allow popups for this site, then try again.');
+    return;
+  }
+
+  const html = `<!doctype html>
 <html lang="${isAr ? 'ar' : 'en'}" dir="${isAr ? 'rtl' : 'ltr'}">
 <head>
 <meta charset="utf-8" />
@@ -1322,84 +1325,143 @@ function printPDF(){
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
 <style>
   @page { size: A4; margin: 18mm 16mm; }
-  * { box-sizing: border-box; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
   html, body {
-    background: #ffffff !important;
-    color: #000000 !important;
-    margin: 0; padding: 0;
+    background: #ffffff;
+    color: #000000;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+
   body {
-    font-family: 'Times New Roman', 'Cairo', serif;
-    font-size: 12pt;
+    font-family: 'Times New Roman', 'Cairo', 'Georgia', serif;
+    font-size: 11.5pt;
     line-height: 1.55;
     color: #000;
+    padding: 0;
   }
-  .cv-paper { padding: 0; box-shadow: none; background: #fff; }
-  .cv-header { text-align: center; margin-bottom: 14pt; }
+
+  .cv-paper {
+    background: #fff;
+    color: #000;
+  }
+
+  /* Header */
+  .cv-header { text-align: center; margin-bottom: 16pt; }
   .cv-name {
-    font-family: 'Playfair Display', 'Cairo', serif;
-    font-size: 22pt; font-weight: 700;
-    letter-spacing: 2px; text-transform: uppercase;
-    margin-bottom: 4pt; color: #000;
+    font-family: 'Playfair Display', 'Times New Roman', 'Cairo', serif;
+    font-size: 22pt;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4pt;
+    color: #000;
   }
-  .cv-title-line { font-size: 12pt; font-style: italic; margin-bottom: 4pt; color: #000; }
-  .cv-contact-line { font-size: 10.5pt; color: #000; }
-  .cv-section { margin-top: 14pt; page-break-inside: avoid; }
+  .cv-title-line {
+    font-size: 12pt;
+    font-style: italic;
+    margin-bottom: 4pt;
+    color: #000;
+  }
+  .cv-contact-line {
+    font-size: 10.5pt;
+    color: #000;
+    word-break: break-word;
+  }
+
+  /* Sections */
+  .cv-section {
+    margin-top: 14pt;
+    page-break-inside: avoid;
+  }
   .cv-section-heading {
-    font-family: 'Playfair Display', 'Cairo', serif;
-    font-size: 11.5pt; font-weight: 700;
-    letter-spacing: 1px; text-transform: uppercase;
+    font-family: 'Playfair Display', 'Times New Roman', 'Cairo', serif;
+    font-size: 11.5pt;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     border-bottom: 1.2pt solid #000;
-    padding-bottom: 2pt; margin-bottom: 7pt; color: #000;
+    padding-bottom: 3pt;
+    margin-bottom: 8pt;
+    color: #000;
   }
+
   .cv-summary { text-align: justify; }
-  .cv-entry { margin-bottom: 9pt; page-break-inside: avoid; }
-  .cv-entry-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-  .cv-entry-title { font-weight: 700; }
-  .cv-entry-date { font-weight: 700; white-space: nowrap; }
-  .cv-entry-sub { font-style: italic; color: #000; margin-bottom: 2pt; }
-  .cv-entry ul { margin: 2pt 0 0 16pt; padding: 0; }
+
+  /* Entries (job, education, certificate) */
+  .cv-entry {
+    margin-bottom: 10pt;
+    page-break-inside: avoid;
+  }
+  .cv-entry-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .cv-entry-title { font-weight: 700; color: #000; }
+  .cv-entry-date  { font-weight: 700; white-space: nowrap; color: #000; }
+  .cv-entry-sub   { font-style: italic; color: #000; margin-bottom: 2pt; }
+  .cv-entry ul    { margin: 3pt 0 0 18pt; padding: 0; }
   .cv-entry ul li { margin-bottom: 1pt; }
+  .cv-entry u     { text-decoration: underline; }
+
   .cv-projects { margin-inline-start: 18pt; margin-top: 4pt; }
+  .cv-project  { margin-bottom: 3pt; }
+
+  /* Skills / Languages tags become inline comma-separated text */
   .cv-skills-list, .cv-langs-list { line-height: 1.7; }
   .cv-skill-tag {
-    display: inline; background: transparent !important; padding: 0; margin: 0;
-    border-radius: 0; font-size: 11pt;
+    display: inline !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    font-size: 11pt;
   }
-  .personal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2pt 24pt; }
-  .personal-grid div b { display: inline-block; min-width: 110px; }
-  .cv-refs-note { font-style: italic; }
-  /* Print toolbar hint */
-  @media screen { body { padding: 24pt; max-width: 720px; margin: 24px auto; box-shadow: 0 0 18px rgba(0,0,0,.1); } }
+
+  /* Personal details grid */
+  .personal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2pt 24pt;
+  }
+  .personal-grid div b { display: inline-block; min-width: 110px; font-weight: 700; }
+
+  .cv-refs-note { font-style: italic; color: #000; }
+
+  /* On-screen preview before printing (just so the user sees it nicely if print is cancelled) */
+  @media screen {
+    body { padding: 36pt; max-width: 720px; margin: 24px auto; box-shadow: 0 0 18px rgba(0,0,0,.1); background: #fff; }
+  }
 </style>
 </head>
 <body>
 ${cv.outerHTML}
 <script>
-  // Convert skill tags to comma-separated text
-  document.querySelectorAll('.cv-skill-tag').forEach((t, i, a) => {
-    if (i < a.length - 1) t.insertAdjacentText('afterend', ', ');
+(function(){
+  // Convert skill tags into comma-separated text for clean printing
+  document.querySelectorAll('.cv-skill-tag').forEach(function(tag, i, arr){
+    if (i < arr.length - 1) tag.insertAdjacentText('afterend', ', ');
   });
+  // Wait for fonts, then trigger native print dialog
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function(){ setTimeout(function(){ window.print(); }, 200); });
+  } else {
+    setTimeout(function(){ window.print(); }, 600);
+  }
+  // Close window after the print dialog is dismissed (or after a generous timeout)
+  window.addEventListener('afterprint', function(){ setTimeout(function(){ window.close(); }, 200); });
+})();
 </` + `script>
 </body>
-</html>`);
-  doc.close();
+</html>`;
 
-  // Wait for fonts to load, then trigger print
-  iframe.onload = () => {
-    setTimeout(() => {
-      try {
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-      } catch (e) { console.error(e); }
-      // Cleanup after a delay (give the print dialog time to open)
-      setTimeout(() => {
-        if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-      }, 2000);
-    }, 400);
-  };
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
 }
 
 
