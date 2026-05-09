@@ -334,6 +334,218 @@ body[dir="rtl"] .section.open .section-head .chev { transform: rotate(-90deg); }
   font-weight: 600; cursor: pointer; font-family: inherit;
 }
 
+/* ===== Welcome Modal ===== */
+.welcome-modal-backdrop {
+  background: rgba(15, 30, 25, 0.72);
+}
+.welcome-modal {
+  max-width: 480px;
+  padding: 0;
+  overflow: hidden;
+  animation: welcomePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes welcomePop {
+  0% { transform: scale(0.85) translateY(20px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.welcome-header {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--primary-light));
+  color: #fff;
+  padding: 28px 24px 22px;
+  text-align: center;
+  position: relative;
+}
+.welcome-header::after {
+  content: "";
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 24px;
+  background: #fff;
+  clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 60%);
+}
+.welcome-avatar {
+  width: 64px; height: 64px;
+  margin: 0 auto 10px;
+  background: var(--accent);
+  color: var(--primary-dark);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: 28px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  border: 3px solid #fff;
+}
+.welcome-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+.welcome-sub {
+  font-size: 13px;
+  opacity: 0.92;
+  margin: 0;
+  color: #fff;
+}
+.welcome-msg {
+  padding: 22px 24px 6px;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text);
+  text-align: center;
+}
+.welcome-socials {
+  padding: 8px 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.social-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-family: inherit;
+  font-weight: 600;
+  border: 2px solid transparent;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  cursor: pointer;
+}
+.social-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+.social-icon {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+  font-size: 18px;
+}
+.social-text { flex: 1; display: flex; flex-direction: column; gap: 2px; line-height: 1.2; }
+.social-label { font-size: 14.5px; font-weight: 700; }
+.social-handle { font-size: 12px; opacity: 0.75; font-weight: 500; }
+.social-arrow { font-size: 12px; opacity: 0.6; }
+
+/* Check mark — hidden by default, shown when this platform was clicked */
+.social-check {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: #22c55e;
+  color: #fff;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  animation: checkPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.social-btn.clicked .social-check { display: flex; }
+.social-btn.clicked .social-arrow { display: none; }
+.social-btn.clicked {
+  border-color: #22c55e !important;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15) !important;
+}
+@keyframes checkPop {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+/* Welcome hint */
+.welcome-hint {
+  margin: 14px 24px 0;
+  font-size: 12.5px;
+  color: var(--text-soft);
+  text-align: center;
+  line-height: 1.55;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.3s;
+}
+.welcome-hint i { color: var(--primary); }
+.welcome-hint.success {
+  color: #15803d;
+  font-weight: 600;
+}
+.welcome-hint.success i { color: #22c55e; }
+
+.social-x {
+  background: #f4f4f4;
+  color: #000;
+  border-color: #e0e0e0;
+}
+.social-x .social-icon { background: #000; color: #fff; }
+.social-x:hover { border-color: #000; }
+
+.social-linkedin {
+  background: #eaf3fb;
+  color: #0a66c2;
+  border-color: #d0e5f5;
+}
+.social-linkedin .social-icon { background: #0a66c2; color: #fff; }
+.social-linkedin:hover { border-color: #0a66c2; }
+
+.social-telegram {
+  background: #e8f4fb;
+  color: #0088cc;
+  border-color: #cfe8f7;
+}
+.social-telegram .social-icon { background: linear-gradient(135deg, #29a9ea, #0088cc); color: #fff; }
+.social-telegram:hover { border-color: #0088cc; }
+
+.welcome-continue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: calc(100% - 48px);
+  margin: 18px 24px 24px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #fff;
+  border: 0;
+  padding: 13px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 4px 14px rgba(31, 111, 84, 0.3);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.welcome-continue:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(31, 111, 84, 0.4);
+}
+.welcome-continue:disabled {
+  background: linear-gradient(135deg, #9aa3a0, #b0b8b5);
+  cursor: not-allowed;
+  opacity: 0.85;
+  box-shadow: none;
+}
+.welcome-continue:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+body[dir="rtl"] .welcome-continue i { transform: rotate(180deg); }
+
+/* Mobile tweaks for welcome modal */
+@media (max-width: 480px) {
+  .welcome-modal { max-width: 100%; }
+  .welcome-header { padding: 22px 18px 20px; }
+  .welcome-avatar { width: 54px; height: 54px; font-size: 22px; }
+  .welcome-header h2 { font-size: 19px; }
+  .welcome-msg { padding: 18px 18px 4px; font-size: 13.5px; }
+  .welcome-socials { padding: 6px 18px 0; }
+  .welcome-continue { margin: 16px 18px 20px; width: calc(100% - 36px); }
+}
+
 @media print {
   body { background: #fff; }
   .app-header, .editor-panel, .preview-title { display: none !important; }
@@ -600,6 +812,64 @@ body[dir="rtl"] .cv-paper, body[dir="rtl"] .cv-name, body[dir="rtl"] .cv-section
   </section>
 </main>
 
+<!-- =================== WELCOME MODAL =================== -->
+<div class="modal-backdrop welcome-modal-backdrop" id="welcomeModal">
+  <div class="modal welcome-modal">
+    <div class="welcome-header">
+      <div class="welcome-avatar">S</div>
+      <h2 data-i18n="welcomeTitle">Welcome! 👋</h2>
+      <p class="welcome-sub" data-i18n="welcomeSub">Before you start using the CV Builder...</p>
+    </div>
+
+    <p class="welcome-msg" data-i18n="welcomeMsg">
+      To use this free CV Builder, please follow me on at least one platform below.
+      It really helps me bring you more free tools and updates! 💚
+    </p>
+
+    <div class="welcome-socials">
+      <a href="https://x.com/SU2TAN" target="_blank" rel="noopener" class="social-btn social-x" onclick="markSocialClick('x')">
+        <span class="social-icon"><i class="fa-brands fa-x-twitter"></i></span>
+        <span class="social-text">
+          <span class="social-label">X (Twitter)</span>
+          <span class="social-handle">@SU2TAN</span>
+        </span>
+        <span class="social-check"><i class="fa-solid fa-check"></i></span>
+        <i class="fa-solid fa-arrow-up-right-from-square social-arrow"></i>
+      </a>
+
+      <a href="https://www.linkedin.com/in/sultan-ayed-6502aa156/" target="_blank" rel="noopener" class="social-btn social-linkedin" onclick="markSocialClick('linkedin')">
+        <span class="social-icon"><i class="fa-brands fa-linkedin-in"></i></span>
+        <span class="social-text">
+          <span class="social-label">LinkedIn</span>
+          <span class="social-handle" data-i18n="welcomeFollow">Follow me</span>
+        </span>
+        <span class="social-check"><i class="fa-solid fa-check"></i></span>
+        <i class="fa-solid fa-arrow-up-right-from-square social-arrow"></i>
+      </a>
+
+      <a href="https://t.me/SULTAN_AYED" target="_blank" rel="noopener" class="social-btn social-telegram" onclick="markSocialClick('telegram')">
+        <span class="social-icon"><i class="fa-brands fa-telegram"></i></span>
+        <span class="social-text">
+          <span class="social-label">Telegram</span>
+          <span class="social-handle" data-i18n="welcomeJoin">Join the channel</span>
+        </span>
+        <span class="social-check"><i class="fa-solid fa-check"></i></span>
+        <i class="fa-solid fa-arrow-up-right-from-square social-arrow"></i>
+      </a>
+    </div>
+
+    <p class="welcome-hint" id="welcomeHint" data-i18n="welcomeHint">
+      <i class="fa-solid fa-circle-info"></i>
+      Click on any platform above to unlock the CV Builder.
+    </p>
+
+    <button class="welcome-continue" id="welcomeContinueBtn" onclick="closeWelcome()" disabled>
+      <i class="fa-solid fa-lock" id="welcomeBtnIcon"></i>
+      <span id="welcomeBtnText" data-i18n="welcomeLocked">Follow one platform to continue</span>
+    </button>
+  </div>
+</div>
+
 <div class="modal-backdrop" id="aboutModal" onclick="if(event.target.id==='aboutModal') closeModal()">
   <div class="modal">
     <h3><i class="fa-regular fa-circle-question"></i> <span data-i18n="aboutTitle">About</span></h3>
@@ -640,6 +910,14 @@ const i18n = {
     appTitle:'Free Professional CV Builder', appTagline:'BUILD YOUR PROFESSIONAL CV IN MINUTES',
     file:'File', saveCv:'Save CV', loadCv:'Load CV', resetCv:'Reset',
     expandCollapse:'Sections Expand/Collapse', downloadCv:'Download CV',
+    welcomeTitle:'Welcome! 👋', welcomeSub:'Before you start using the CV Builder...',
+    welcomeMsg:'To use this free CV Builder, please follow me on at least one platform below. It really helps me bring you more free tools and updates! 💚',
+    welcomeFollow:'Follow me', welcomeJoin:'Join the channel',
+    welcomeContinue:'Continue to CV Builder',
+    welcomeLocked:'Follow one platform to continue',
+    welcomeUnlocked:'Continue to CV Builder',
+    welcomeHint:'Click on any platform above to unlock the CV Builder.',
+    welcomeHintDone:'Thank you! You can now continue.',
     about:'About', loadSample:'Load Sample CV',
     by:'By:', sponsored:'Personal CV Builder', version:'Version: 1.1.0',
     noticeText:'After entering your information, you can save all CV data (File → Save CV). This allows you to import it again later for any future modifications.',
@@ -696,6 +974,14 @@ const i18n = {
     appTitle:'منشئ السيرة الذاتية الاحترافي المجاني', appTagline:'أنشئ سيرتك الذاتية الاحترافية في دقائق',
     file:'ملف', saveCv:'حفظ السيرة', loadCv:'تحميل السيرة', resetCv:'إعادة ضبط',
     expandCollapse:'توسيع/طي الأقسام', downloadCv:'تنزيل السيرة',
+    welcomeTitle:'حياك الله 👋', welcomeSub:'قبل ما تبدأ باستخدام منشئ السيرة...',
+    welcomeMsg:'لاستخدام هذه الأداة المجانية، يرجى متابعتي على إحدى المنصات أدناه. مساعدتك تشجعني على تقديم المزيد من الأدوات والتحديثات المجانية! 💚',
+    welcomeFollow:'تابعني', welcomeJoin:'انضم للقناة',
+    welcomeContinue:'الدخول إلى منشئ السيرة',
+    welcomeLocked:'تابعني لمنصة واحدة للمتابعة',
+    welcomeUnlocked:'الدخول إلى منشئ السيرة',
+    welcomeHint:'اضغط على أي منصة أعلاه لفتح منشئ السيرة.',
+    welcomeHintDone:'شكراً لك! يمكنك الآن المتابعة.',
     about:'حول', loadSample:'تحميل نموذج',
     by:'بواسطة:', sponsored:'منشئ السيرة الشخصية', version:'الإصدار: 1.1.0',
     noticeText:'بعد إدخال معلوماتك، يمكنك حفظ جميع بيانات السيرة الذاتية (ملف ← حفظ السيرة). يتيح لك ذلك استيرادها مرة أخرى لاحقًا لإجراء أي تعديلات مستقبلية.',
@@ -804,6 +1090,40 @@ document.addEventListener('click', e => {
 });
 function openModal(){ document.getElementById('aboutModal').classList.add('open'); }
 function closeModal(){ document.getElementById('aboutModal').classList.remove('open'); }
+
+/* Welcome modal — shows every time the page loads, REQUIRES one social click */
+function openWelcome(){ document.getElementById('welcomeModal').classList.add('open'); }
+function closeWelcome(){
+  // Only allow closing if the user has clicked at least one social link
+  const btn = document.getElementById('welcomeContinueBtn');
+  if (btn && btn.disabled) return;
+  document.getElementById('welcomeModal').classList.remove('open');
+}
+function markSocialClick(platform){
+  // Mark the clicked button visually with a green check
+  const map = { x: '.social-x', linkedin: '.social-linkedin', telegram: '.social-telegram' };
+  const sel = map[platform];
+  if (sel) {
+    const el = document.querySelector(sel);
+    if (el) el.classList.add('clicked');
+  }
+
+  // Unlock the continue button
+  const btn = document.getElementById('welcomeContinueBtn');
+  const btnIcon = document.getElementById('welcomeBtnIcon');
+  const btnText = document.getElementById('welcomeBtnText');
+  const hint = document.getElementById('welcomeHint');
+
+  if (btn) {
+    btn.disabled = false;
+    if (btnIcon) btnIcon.className = 'fa-solid fa-arrow-right';
+    if (btnText) btnText.textContent = t('welcomeUnlocked');
+  }
+  if (hint) {
+    hint.classList.add('success');
+    hint.innerHTML = '<i class="fa-solid fa-circle-check"></i> ' + t('welcomeHintDone');
+  }
+}
 
 function esc(s){
   return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -1510,6 +1830,13 @@ window.loadCV = loadCV;
 window.resetCV = resetCV;
 window.loadSample = loadSample;
 window.printPDF = printPDF;
+window.closeWelcome = closeWelcome;
+window.markSocialClick = markSocialClick;
+
+// Show the welcome modal on every page load — slight delay so the UI paints first
+setTimeout(() => {
+  try { openWelcome(); } catch(e) { console.error(e); }
+}, 350);
 window.addExperience = addExperience;
 window.addEducation = addEducation;
 window.addCourse = addCourse;
